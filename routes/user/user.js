@@ -107,9 +107,10 @@ route.post('/',  upload.single('client') ,async(req,res)=>{
   
 
   try{
-    const err = userValidation(req.body);
+
+     const err = userValidation(req.body);
        
-    if(err ){ return res.status(400).send(err.error)}
+     if(err ){ return res.status(400).send(err.error.details[0].message + " ===jh ")}
   
     
 // registered user
@@ -141,12 +142,12 @@ const hashPassword = await bcrypt.hash( req.body.password, salt);
       res.send({key:user._id});
     })
     .catch((err)=>{
-      res.send(err )
-      console.log(err);
+      res.send(err + " <==");
+      console.log(err + "==");
     })
   }catch(err){
-    console.log(err);
-    res.send(err + " ==")
+    console.log(err + " ==");
+    res.send(err + " ==");
   }
 
  
