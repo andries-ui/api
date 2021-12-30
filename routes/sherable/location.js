@@ -11,8 +11,8 @@ route.get('/', verify, async (req,res)=>{
     });
 });
 
-route.get("/", verify,async (req, res) => {
-    Location.findById(req.user._id, (err, results) => {
+route.get("/:id", verify,async (req, res) => {
+    Location.findById(req.id, (err, results) => {
    res.send(results);
  });
 });
