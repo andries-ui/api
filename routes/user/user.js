@@ -104,49 +104,49 @@ route.patch("/",verify, async (req, res) => {
 
 route.post('/', upload.single('client') ,async(req,res)=>{   
  
-//   try{
+  try{
 
-//     //  const err = userValidation(req.body);
+    //  const err = userValidation(req.body);
        
-//     //  if(err ){ return res.status(400).send(err.error.details[0].message + " ===jh ")}
+    //  if(err ){ return res.status(400).send(err.error.details[0].message + " ===jh ")}
   
     
-// // registered user
-// const emailExist = await User.findOne({email: req.body.email});
-// const usernameExist = await User.findOne({username: req.body.username});
+// registered user
+const emailExist = await User.findOne({email: req.body.email});
+const usernameExist = await User.findOne({username: req.body.username});
 
-// if(emailExist) return res.status(400).send('Email already registered.');
-// if(usernameExist) return res.status(400).send('Username already taken.');
+if(emailExist) return res.status(400).send('Email already registered.');
+if(usernameExist) return res.status(400).send('Username already taken.');
 
 
-// //encrypt password
-// const salt = await bcrypt.genSalt(10);
-// const hashPassword = await bcrypt.hash( req.body.password, salt);
+//encrypt password
+const salt = await bcrypt.genSalt(10);
+const hashPassword = await bcrypt.hash( req.body.password, salt);
 
-//     const user = new User({
-//       username: req.body.username,
-//       password: hashPassword,
-//       names: req.body.names,
-//       contact: req.body.contact,
-//       email: req.body.email,
-//       type: req.body.type,
-//       createdAt: new Date(),
-//       updatedAt: null,
-//       deletedAt: null,
-//     });
+    const user = new User({
+      username: req.body.username,
+      password: hashPassword,
+      names: req.body.names,
+      contact: req.body.contact,
+      email: req.body.email,
+      type: req.body.type,
+      createdAt: new Date(),
+      updatedAt: null,
+      deletedAt: null,
+    });
 
-//     await User.create(user)
-//     .then(()=>{
-//       res.send({key:user._id});
-//     })
-//     .catch((err)=>{
-//       res.send(err + " <==");
-//       console.log(err + "==");
-//     })
-//   }catch(err){
-//     console.log(err + " ==");
-//     res.send(err + " <<==");
-//   }
+    await User.create(user)
+    .then(()=>{
+      res.send({key:user._id});
+    })
+    .catch((err)=>{
+      res.send(err + " <==");
+      console.log(err + "==");
+    })
+  }catch(err){
+    console.log(err + " ==");
+    res.send(err + " <<==");
+  }
 
  
 })
