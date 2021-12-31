@@ -48,13 +48,13 @@ const schema = Joi.object({
 });
 
 
-route.get('/getall', async (req, res) => {
+route.get('/', async (req, res) => {
   User.find({}, (err, results) => {
     res.send(results);
   });
 });
 
-route.get("/",verify, async (req, res) => {
+route.get("/getuser",verify, async (req, res) => {
   User.findById(req.user._id, (err, results) => {
     res.send({
       status: 'Successful',
