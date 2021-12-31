@@ -155,7 +155,11 @@ route.post('/signup', async (req, res) => {
     //     });
     //   })
 
-    res.send("test");
+    res.send({
+      status: 'Failed',
+      message: 'testing',
+      details: err + '.'
+    })
 
   } catch (err) {
     res.send({
