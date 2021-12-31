@@ -156,7 +156,7 @@ const hashPassword = await bcrypt.hash( req.body.password, salt);
   }catch(err){
     res.send({
       status: 'Failed',
-      message: 'Faild to communicate with the server',
+      message: 'Faild to communicate with the server...',
       details: err + '.'
     })
   }
