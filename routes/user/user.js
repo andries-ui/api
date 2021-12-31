@@ -124,36 +124,38 @@ route.post('/signup', async (req, res) => {
 
 
     //encrypt password
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(req.body.password, salt);
+    // const salt = await bcrypt.genSalt(10);
+    // const hashPassword = await bcrypt.hash(req.body.password, salt);
 
-    const user = new User({
-      username: req.body.username,
-      password: hashPassword,
-      names: req.body.names,
-      contact: req.body.contact,
-      email: req.body.email,
-      type: req.body.type,
-      createdAt: new Date(),
-      updatedAt: 'null',
-      deletedAt: 'null'
-    });
+    // const user = new User({
+    //   username: req.body.username,
+    //   password: hashPassword,
+    //   names: req.body.names,
+    //   contact: req.body.contact,
+    //   email: req.body.email,
+    //   type: req.body.type,
+    //   createdAt: new Date(),
+    //   updatedAt: 'null',
+    //   deletedAt: 'null'
+    // });
 
-    await User.create(user)
-      .then(() => {
-        res.send({
-          key: user._id,
-          status: 'Successful',
-          message: 'User is registered successfully.'
-        });
-      })
-      .catch((err) => {
-        res.send({
-          status: 'Failed',
-          message: 'Process unsuccessful',
-          details: err + '.'
-        });
-      })
+    // await User.create(user)
+    //   .then(() => {
+    //     res.send({
+    //       key: user._id,
+    //       status: 'Successful',
+    //       message: 'User is registered successfully.'
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     res.send({
+    //       status: 'Failed',
+    //       message: 'Process unsuccessful',
+    //       details: err + '.'
+    //     });
+    //   })
+
+    res.send("test");
 
   } catch (err) {
     res.send({
