@@ -20,9 +20,10 @@ const loginRoute = require("./routes/user/login")
 const hotelloginRoute = require("./routes/hotel/login")
 const locationRoute = require("./routes/sherable/location")
 const employeeRoute = require("./routes/hotel/employee/employee")
-const propertyRoute = require("./routes/hotel/room/property")
+const propertyRoute = require("./routes/hotel/room/property");
+
 mongoose
-  .connect(process.env.DB_CONNECTION, { useNewUrlParser: true }) 
+  .connect(process.env.DB_CONNECTION, { useNewUrlParser: true ,useUnifiedTopology:true}) 
   .then(() => {
     console.log(`successfully connected`);
   })

@@ -102,8 +102,9 @@ route.patch("/",verify, async (req, res) => {
  
 });
 
-route.post('/', upload.single('client') ,async(req,res)=>{   
+route.post('/',  upload.single('client') ,async(req,res)=>{   
  
+  
   try{
 
     //  const err = userValidation(req.body);
@@ -123,29 +124,43 @@ if(usernameExist) return res.status(400).send('Username already taken.');
 const salt = await bcrypt.genSalt(10);
 const hashPassword = await bcrypt.hash( req.body.password, salt);
 
+let {username, names, contact, email, type}=rq.body;
     const user = new User({
-      username: req.body.username,
+      username: username,
       password: hashPassword,
-      names: req.body.names,
-      contact: req.body.contact,
-      email: req.body.email,
-      type: req.body.type,
+      names: names,
+      contact: contact,
+      email: email,
+      type: type,
       createdAt: new Date(),
       updatedAt: null,
       deletedAt: null,
     });
 
-    await User.create(user)
+    if( username == ''||  names == ''|| contact == ''|| email == ''|| type == ''){
+      res.json({
+        status:Failed,
+        message: 'Some inputs are not provided.'
+      })
+    }
+
+
+
+    await user.save()
     .then(()=>{
-      res.send({key:user._id});
+      res.json({key:user._id,
+      status: 'Successful',
+      message:'User is successfully registeres'});
     })
     .catch((err)=>{
-      res.send(err + " <==");
-      console.log(err + "==");
+      res.json({ status: 'Failed',
+        message:'Error encountered! user is not registered',
+      details: err});
     })
   }catch(err){
-    console.log(err + " ==");
-    res.send(err + " <<==");
+    res.json({ status: 'Failed',
+      message:'Error encountered! user is not registered',
+      details: err});
   }
 
  
