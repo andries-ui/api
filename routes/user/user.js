@@ -123,16 +123,16 @@ route.post('/signup', async (req, res) => {
       username: req.body.username
     });
 
-    if (emailExist) return res.send({
+    if (emailExist) {return res.send({
       status: 'Failed',
       message: 'Account already exist.',
       details: err + '.'
-    });
-    if (usernameExist) return res.send({
+    });}
+    if (usernameExist){ return res.send({
       status: 'Failed',
       message: 'User name already exist',
       details: err + '.'
-    });
+    });}
 
 
     //encrypt password
