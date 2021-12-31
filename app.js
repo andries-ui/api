@@ -25,10 +25,13 @@ const propertyRoute = require("./routes/hotel/room/property");
 mongoose
   .connect(process.env.DB_CONNECTION, { useNewUrlParser: true ,useUnifiedTopology:true}) 
   .then(() => {
-    console.log(`successfully connected`);
+    console.log(`Server is online`);
   })
   .catch((e) => {
-    console.log(`not connected`);
+    res.send({
+      status: 'Failed',
+      message: 'Server is currently Offline. Please try againe in a moment'
+    })
   });
 
 // mongoose.connect(process.env., {

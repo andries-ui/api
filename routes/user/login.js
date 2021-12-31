@@ -16,11 +16,11 @@ route.post('/', async (req, res) => {
     email: req.body.email,
   });
 
-  const 
-    err
-   = userLogin(req.body);
+  // const 
+  //   err
+  //  = userLogin(req.body);
 
-  if (err) return res.status(400).send(err.error.details[0].message);
+  // if (err) return res.status(400).send(err.error.details[0].message);
 
   // registered user
   const useremail = await User.findOne({
@@ -29,18 +29,29 @@ route.post('/', async (req, res) => {
 
 
   //verify email or user name
-  if (!useremail ) return res.status(400).send('You are not registered with sunstar.');
+  if (!useremail )     
+  { return res.send({
+    status: 'Failed',
+    message: 'You are not registered yet.'
+  });}
 
   //verify password
   const validPassword = await bcrypt.compare(req.body.password ,useremail.password);
 
-  if (!validPassword) return res.status(400).send( "Invalid email or password.");
+  if (!validPassword)     { return res.send({
+    status: 'Failed',
+    message: 'Invalid E-mail or password'
+  });}
 
   // create token
   const token = jwt.sign({
     _id: user._id
   }, process.env.TOKEN_SECRET);
-  res.header('token', token).send(token);
+  res.header('token', token).send({
+    status: 'Success',
+    message: 'You are signed in',
+    token: token,
+  });
 
 })
 
