@@ -41,7 +41,7 @@ route.post('/', async (req, res) => {
   // if (err) return res.status(400).send(err.error.details[0].message);
 
   // registered user
-  const system = await User.findOne({
+  const type = await User.findOne({
     type: req.body.type
   });
 
