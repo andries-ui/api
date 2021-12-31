@@ -105,14 +105,14 @@ route.patch("/", verify, async (req, res) => {
 
 });
 
-route.post('/signup', upload.single('client'), async (req, res) => {
+route.post('/signup', async (req, res) => {
 
 
   try {
 
     //  const err = userValidation(req.body);
 
-    //  if(err ){ return res.status(400).send(err.error.details[0].message + " ===jh ")}
+    //  if(err ){ return res.status(400).send(err.error.details[0].message + ".")}
 
 
     // registered user
@@ -145,25 +145,24 @@ route.post('/signup', upload.single('client'), async (req, res) => {
 
     await User.create(user)
       .then(() => {
-          res.json({
+          res.send({
             key: user._id,
             status: 'Successful',
             message: 'User is registered successfully.'
-          })
-        
+          }) 
       })
       .catch((err) => {
-        res.json({
+        res.send({
           status: 'Failed',
           message: 'Registration has failed.',
           details: err
         })
       })
   } catch (err) {
-    res.json({
+    res.send({
       status: 'Failed',
       message: 'Failed to communicate with the server.',
-      details: err +' .'
+      details: err +'.'
     });
   }
 
