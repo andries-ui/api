@@ -139,8 +139,8 @@ route.post('/signup', async (req, res) => {
       email: req.body.email,
       type: req.body.type,
       createdAt: new Date(),
-      updatedAt: 'null',
-      deletedAt: 'null'
+      updatedAt: null,
+      deletedAt: null
     });
 
     await User.create(user)
