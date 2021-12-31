@@ -55,7 +55,8 @@ route.post('/', async (req, res) => {
 }catch(err){
   res.send({
     status: 'Failed',
-    message: 'You are not registered yet.'
+    message: 'You are not registered yet.',
+    err: err+"."
   })
 }
 
