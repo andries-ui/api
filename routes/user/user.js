@@ -116,20 +116,24 @@ route.post('/signup', async (req, res) => {
 
 
     // registered user
-    const emailExist = await User.findOne({email: req.body.email});
-    const usernameExist = await User.findOne({username: req.body.username});
+    const emailExist = await User.findOne({
+      email: req.body.email
+    });
+    const usernameExist = await User.findOne({
+      username: req.body.username
+    });
 
-    if(emailExist) return res.status(400).send('Email already registered.');
-    if(usernameExist) return res.status(400).send('Username already taken.');
+    if (emailExist) return res.status(400).send('Email already registered.');
+    if (usernameExist) return res.status(400).send('Username already taken.');
 
 
     //encrypt password
-    // const salt = await bcrypt.genSalt(10);
-    // const hashPassword = await bcrypt.hash(req.body.password, salt);
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
 
     const user = new User({
       username: req.body.username,
-      password: 'hashPassword',
+      password: hashPassword,
       names: req.body.names,
       contact: req.body.contact,
       email: req.body.email,
@@ -154,11 +158,6 @@ route.post('/signup', async (req, res) => {
           details: err + '.'
         });
       })
-
-    res.send({
-      status: 'Failed',
-      message: 'testing..'
-    })
 
   } catch (err) {
     res.send({
