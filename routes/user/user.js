@@ -50,7 +50,7 @@ const schema = Joi.object({
 
 route.get('/', async (req, res) => {
   User.find({}, (err, results) => {
-    res.send(results);
+    res.send("results");
   });
 });
 
