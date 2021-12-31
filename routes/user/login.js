@@ -34,6 +34,24 @@ route.post('/', async (req, res) => {
     message: 'You are not registered yet.'
   });}
 
+ // const 
+  //   err
+  //  = userLogin(req.body);
+
+  // if (err) return res.status(400).send(err.error.details[0].message);
+
+  // registered user
+  const system = await User.findOne({
+    type: req.body.type
+  });
+
+  //verify email or user name
+  if (type === "client" )     
+  { return res.send({
+    status: 'Failed',
+    message: 'You are not allowd to access this portal.'
+  });}
+
   //verify password
   const validPassword = await bcrypt.compare(req.body.password ,useremail.password);
 
