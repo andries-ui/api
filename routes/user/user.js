@@ -148,15 +148,15 @@ const hashPassword = await bcrypt.hash( req.body.password, salt);
       res.send({
         status: 'Failed',
         message: 'Process unsuccessful',
-        details: err
+        details: err + '.'
       }) 
     })
   }catch(err){
     res.send({
       status: 'Failed',
       message: 'Faild to communicate with the server',
-      details: err
-    }) 
+      details: err + '.'
+    }) ;
   }
  
 })
