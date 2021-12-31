@@ -56,7 +56,7 @@ route.get('/', async (req, res) => {
 
 route.get("/:id", async (req, res) => {
   User.findById(req.params.id, (err, results) => {
-    res.send(results);
+    res.send('results');
   });
 });
 
