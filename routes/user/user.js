@@ -1,6 +1,9 @@
 const express = require('express');
 const User = require('../../module/user/user');
-const {userValidation, userLogin}  = require('../../validation/externals/user');
+const {
+  userValidation,
+  userLogin
+} = require('../../validation/externals/user');
 const route = express.Router();
 const bcrypt = require('bcryptjs');
 const verify = require('../../validation/sherable/verifyToken');
@@ -12,7 +15,7 @@ const storage = multer.diskStorage({
     callback(null, './uploads/user/');
   },
   filename: (req, file, callback) => {
-    callback(null, file.originalname+new Date());
+    callback(null, file.originalname + new Date());
   }
 });
 
@@ -37,47 +40,47 @@ const upload = multer({
 
 const schema = Joi.object({
   username: Joi.string().min(5).required(),
-  password:Joi.string().required(),
+  password: Joi.string().required(),
   names: Joi.string().min(3).required(),
   contact: Joi.string().length(10).required(),
   email: Joi.string().email().required(),
   type: Joi.string().required(),
+});
+
+
+route.get('/', async (req, res) => {
+  User.find({}, (err, results) => {
+    res.send(results);
   });
-
-
-route.get('/', async (req,res)=>{
-     User.find({}, (err, results) => {
-      res.send( results);
-    });
 });
 
 route.get("/:id", async (req, res) => {
   User.findById(req.params.id, (err, results) => {
-   res.send(results);
- });
+    res.send(results);
+  });
 });
 
 route.delete("/:id", async (req, res) => {
   User.findById(req.params.id)
-   .deleteOne()
-   .exec((err) => {
-     res.send("Removed Successfully");
-     //  if (!err) {
-     //    console.log("Removed Successfully");
-     //    res.send("Removed Successfully");
-     //  } else {
-     //    console.log("Error in removing the entry");
+    .deleteOne()
+    .exec((err) => {
+      res.send("Removed Successfully");
+      //  if (!err) {
+      //    console.log("Removed Successfully");
+      //    res.send("Removed Successfully");
+      //  } else {
+      //    console.log("Error in removing the entry");
 
-     //    res.send(err);
-     //  }
-   });
+      //    res.send(err);
+      //  }
+    });
 });
 
 
 
-route.patch("/",verify, async (req, res) => {
+route.patch("/", verify, async (req, res) => {
   const updateUser = new User({
-    _id:req.user._id,
+    _id: req.user._id,
     names: req.body.names,
     url: req.body.url,
     contact: req.body.contact,
@@ -85,85 +88,86 @@ route.patch("/",verify, async (req, res) => {
     updatedAt: new Date(),
   });
 
-  try{
-    User.findById(req.user._id).update( updateUser)
-    .then((results)=>{
+  try {
+    User.findById(req.user._id).update(updateUser)
+      .then((results) => {
 
-      // if(err) return res.status(400).send('Could not update successfully')
-      res.send(results)
-    })
-    .catch((err)=>{
-      res.send(err + ".")
-    })
-   
-  }catch(err){
+        // if(err) return res.status(400).send('Could not update successfully')
+        res.send(results)
+      })
+      .catch((err) => {
+        res.send(err + ".")
+      })
+
+  } catch (err) {
     res.send(err + ".--")
   }
- 
+
 });
 
-route.post('/',  upload.single('client') ,async(req,res)=>{   
- 
-  
-  try{
+route.post('/signup', upload.single('client'), async (req, res) => {
+
+
+  try {
 
     //  const err = userValidation(req.body);
-       
+
     //  if(err ){ return res.status(400).send(err.error.details[0].message + " ===jh ")}
-  
-    
-// registered user
-const emailExist = await User.findOne({email: req.body.email});
-const usernameExist = await User.findOne({username: req.body.username});
-
-if(emailExist) return res.status(400).send('Email already registered.');
-if(usernameExist) return res.status(400).send('Username already taken.');
 
 
-//encrypt password
-const salt = await bcrypt.genSalt(10);
-const hashPassword = await bcrypt.hash( req.body.password, salt);
+    // registered user
+    const emailExist = await User.findOne({
+      email: req.body.email
+    });
+    const usernameExist = await User.findOne({
+      username: req.body.username
+    });
 
-let {username, names, contact, email, type}=rq.body;
+    if (emailExist) return res.status(400).send('Email already registered.');
+    if (usernameExist) return res.status(400).send('Username already taken.');
+
+
+    //encrypt password
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
+
     const user = new User({
-      username: username,
+      username: req.body.username,
       password: hashPassword,
-      names: names,
-      contact: contact,
-      email: email,
-      type: type,
+      names: req.body.names,
+      contact: req.body.contact,
+      email: req.body.email,
+      type: req.body.type,
       createdAt: new Date(),
       updatedAt: null,
       deletedAt: null,
     });
 
-    if( username == ''||  names == ''|| contact == ''|| email == ''|| type == ''){
-      res.json({
-        status:Failed,
-        message: 'Some inputs are not provided.'
+    await User.create(user)
+      .then(() => {
+          res.json({
+            key: user._id,
+            status: 'Successful',
+            message: 'User is registered successfully.'
+          })
+        
       })
-    }
-
-
-
-    await user.save()
-    .then(()=>{
-      res.json({key:user._id,
-      status: 'Successful',
-      message:'User is successfully registeres'});
-    })
-    .catch((err)=>{
-      res.json({ status: 'Failed',
-        message:'Error encountered! user is not registered',
-      details: err});
-    })
-  }catch(err){
-    res.json({ status: 'Failed',
-      message:'Error encountered! user is not registered',
-      details: err});
+      .catch((err) => {
+        res.json({
+          status: 'Failed',
+          message: 'Registration has failed.',
+          details: err
+        })
+      })
+  } catch (err) {
+    res.json({
+      status: 'Failed',
+      message: 'Failed to communicate with the server.',
+      details: err +' .'
+    });
   }
 
- 
-})
+
+});
 
 module.exports = route;
