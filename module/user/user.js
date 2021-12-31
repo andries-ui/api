@@ -31,16 +31,13 @@ const userShema = mongoose.Schema({
     required: true,
   },
   createdAt: {
-    type: Date,
-    default: new Date(),
+    type: String
   },
   updatedAt: {
-    type: Date,
-    default: new Date(),
+    type: String
   },
   deletedAt: {
-    type: Date,
-    default: null,
+    type: String
   },
 });
 

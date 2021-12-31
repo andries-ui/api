@@ -132,8 +132,8 @@ const hashPassword = await bcrypt.hash( req.body.password, salt);
       email: req.body.email,
       type: req.body.type,
       createdAt: new Date(),
-      updatedAt: null,
-      deletedAt: null,
+      updatedAt: 'null',
+      deletedAt: 'null'
     });
 
     await User.create(user)
@@ -142,21 +142,22 @@ const hashPassword = await bcrypt.hash( req.body.password, salt);
         key: user._id,
         status: 'Successful',
         message: 'User is registered successfully.'
-      }) 
+      });
     })
     .catch((err)=>{
       res.send({
         status: 'Failed',
         message: 'Process unsuccessful',
         details: err + '.'
-      }) 
+      });
     })
+    
   }catch(err){
     res.send({
       status: 'Failed',
       message: 'Faild to communicate with the server',
       details: err + '.'
-    }) ;
+    })
   }
  
 })
