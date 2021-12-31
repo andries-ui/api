@@ -136,21 +136,22 @@ const hashPassword = await bcrypt.hash( req.body.password, salt);
       deletedAt: 'null'
     });
 
-    await User.create(user)
-    .then(()=>{
-      res.send({
-        key: user._id,
-        status: 'Successful',
-        message: 'User is registered successfully.'
-      });
-    })
-    .catch((err)=>{
-      res.send({
-        status: 'Failed',
-        message: 'Process unsuccessful',
-        details: err + '.'
-      });
-    })
+    res.send(user);
+    // await User.create(user)
+    // .then(()=>{
+    //   res.send({
+    //     key: user._id,
+    //     status: 'Successful',
+    //     message: 'User is registered successfully.'
+    //   });
+    // })
+    // .catch((err)=>{
+    //   res.send({
+    //     status: 'Failed',
+    //     message: 'Process unsuccessful',
+    //     details: err + '.'
+    //   });
+    // })
     
   }catch(err){
     res.send({
