@@ -116,11 +116,11 @@ route.post('/signup', async (req, res) => {
 
 
     // registered user
-    // const emailExist = await User.findOne({email: req.body.email});
-    // const usernameExist = await User.findOne({username: req.body.username});
+    const emailExist = await User.findOne({email: req.body.email});
+    const usernameExist = await User.findOne({username: req.body.username});
 
-    // if(emailExist) return res.status(400).send('Email already registered.');
-    // if(usernameExist) return res.status(400).send('Username already taken.');
+    if(emailExist) return res.status(400).send('Email already registered.');
+    if(usernameExist) return res.status(400).send('Username already taken.');
 
 
     //encrypt password
