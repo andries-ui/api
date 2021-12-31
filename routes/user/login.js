@@ -10,7 +10,7 @@ const jwt = require('jsonwebtoken');
 
 route.post('/', async (req, res) => {
 
- 
+ try{
   const user = new User({
     password: req.body.password,
     email: req.body.email,
@@ -26,7 +26,6 @@ route.post('/', async (req, res) => {
   const useremail = await User.findOne({
     email: req.body.email
   });
-
 
   //verify email or user name
   if (!useremail )     
@@ -51,7 +50,14 @@ route.post('/', async (req, res) => {
     status: 'Success',
     message: 'You are signed in',
     token: token,
+    key: user._id
   });
+}catch(err){
+  res.send({
+    status: 'Failed',
+    message: 'You are not registered yet.'
+  })
+}
 
 })
 
