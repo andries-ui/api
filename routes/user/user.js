@@ -48,20 +48,36 @@ const schema = Joi.object({
 });
 
 
-route.get('/', async (req, res) => {
+route.get('/getall', async (req, res) => {
   User.find({}, (err, results) => {
     res.send(results);
   });
 });
 
-route.get("/:id", async (req, res) => {
-  User.findById(req.params.id, (err, results) => {
-    res.send(results);
+route.get("/getuser",verify, async (req, res) => {
+  User.findById(req.user._id, (err, results) => {
+    res.send({
+      status: 'Successful',
+      message: 'User retrieved',
+      res: res.send(results)
+    });
+  })
+  .then((res)=>{
+    res.send({
+      status: 'Successful',
+      message: 'User retrieved'
+    })
+    .catch((err)=>{
+      res.send({
+        status: 'Failed',
+        message: err + '.'
+      });
+    });
   });
 });
 
-route.delete("/:id", async (req, res) => {
-  User.findById(req.params.id)
+route.delete("/delete", verify, async (req, res) => {
+  User.findById(req.user._id)
     .deleteOne()
     .exec((err) => {
       res.send("Removed Successfully");
@@ -78,7 +94,7 @@ route.delete("/:id", async (req, res) => {
 
 
 
-route.patch("/", verify, async (req, res) => {
+route.patch("/update", verify, async (req, res) => {
   const updateUser = new User({
     _id: req.user._id,
     names: req.body.names,
