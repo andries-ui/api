@@ -124,8 +124,8 @@ route.post('/signup', async (req, res) => {
 
 
     //encrypt password
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(req.body.password, salt);
+    // const salt = await bcrypt.genSalt(10);
+    // const hashPassword = await bcrypt.hash(req.body.password, salt);
 
     // const user = new User({
     //   username: req.body.username,
@@ -157,7 +157,7 @@ route.post('/signup', async (req, res) => {
 
     res.send({
       status: 'Failed',
-      message: 'testing'
+      message: 'testing..'
     })
 
   } catch (err) {
