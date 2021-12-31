@@ -157,8 +157,7 @@ route.post('/signup', async (req, res) => {
 
     res.send({
       status: 'Failed',
-      message: 'testing',
-      details: err + '.'
+      message: 'testing'
     })
 
   } catch (err) {
