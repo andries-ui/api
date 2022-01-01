@@ -22,30 +22,44 @@ const locationRoute = require("./routes/sherable/location")
 const employeeRoute = require("./routes/hotel/employee/employee")
 const propertyRoute = require("./routes/hotel/room/property");
 
+
+ //==========================================================================
+// Database connection
+//==========================================================================
+//----------------------------------------------------------------------------
+
 mongoose
-  .connect(process.env.DB_CONNECTION, { useNewUrlParser: true ,useUnifiedTopology:true}) 
+  .connect(process.env.DB_CONNECTION, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
   .then(() => {
     console.log(`Server is online`);
+    console.log({
+      status: 'Successful',
+      message: 'Server is online'
+    })
   })
   .catch((e) => {
-    res.send({
+    console.log({
       status: 'Failed',
       message: 'Server is currently Offline. Please try againe in a moment'
     })
   });
 
-// mongoose.connect(process.env., {
-//   userNewUrlParse: true,
-//   useCreateIndex: true,
-//   useUnifiedTopology: true,
-// });
 
-// const connection = mongoose.connection;
-// connection.once('open', ()=>{
-// console.log("database connected :)");
-// })
+  //==========================================================================
+// End
+//==========================================================================
+//----------------------------------------------------------------------------
 
-app.use('uploads/hotel/logo',express.static('uploads/hotel/logo'));
+
+
+//==========================================================================
+// Middlewears
+//==========================================================================
+
+app.use('uploads/hotel/logo', express.static('uploads/hotel/logo'));
 app.use(bodyParser.json());
 
 //location route
@@ -59,8 +73,8 @@ app.use("/login", loginRoute);
 // hotel routes
 app.use("/hotel", hotelRoute);
 app.use("/hotelRating", hotelRatingRoute);
-app.use('/hotelLogin',hotelloginRoute)
-app.use('/employee',employeeRoute)
+app.use('/hotelLogin', hotelloginRoute)
+app.use('/employee', employeeRoute)
 
 //room routes
 app.use("/roomRating", roomRatingRoute);
@@ -78,5 +92,18 @@ app.use("/tripReservation", tripReservationRoute);
 app.use("/trips", tripsRoute);
 app.use("/vehicle", vehicleRoute);
 
+//==========================================================================
+// End
+//==========================================================================
+//----------------------------------------------------------------------------
+
+//==========================================================================
+// App listons 
+//==========================================================================
 
 app.listen(process.env.PORT)
+
+//==========================================================================
+// End
+//==========================================================================
+//----------------------------------------------------------------------------

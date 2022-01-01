@@ -38,90 +38,44 @@ const upload = multer({
 });
 
 
-const schema = Joi.object({
-  username: Joi.string().min(5).required(),
-  password: Joi.string().required(),
-  names: Joi.string().min(3).required(),
-  contact: Joi.string().length(10).required(),
-  email: Joi.string().email().required(),
-  type: Joi.string().required(),
-});
 
 
+// Getting all
+// --------------------------------------------------
 route.get('/', async (req, res) => {
-  User.find({}, (err, results) => {
-    res.send(results);
-  });
-});
-
-route.get("/getuser:id",  async (req, res) => {
-  User.findById(req.body.id, (err, results) => {
-    res.send({
-      status: 'Successful',
-      message: 'User retrieved',
-      res: results
-    });
-  })
-  .then((res)=>{
-    res.send({
-      status: 'Successful',
-      message: 'User retrieved'
-    })
-    .catch((err)=>{
-      res.send({
-        status: 'Failed',
-        message: err + '.'
-      });
-    });
-  });
-});
-
-route.delete("/delete", verify, async (req, res) => {
-  User.findById(req.user._id)
-    .deleteOne()
-    .exec((err) => {
-      res.send("Removed Successfully");
-      //  if (!err) {
-      //    console.log("Removed Successfully");
-      //    res.send("Removed Successfully");
-      //  } else {
-      //    console.log("Error in removing the entry");
-
-      //    res.send(err);
-      //  }
-    });
-});
-
-
-
-route.patch("/update", verify, async (req, res) => {
-  const updateUser = new User({
-    _id: req.user._id,
-    names: req.body.names,
-    url: req.body.url,
-    contact: req.body.contact,
-    type: req.body.type,
-    updatedAt: new Date(),
-  });
-
   try {
-    User.findById(req.user._id).update(updateUser)
-      .then((results) => {
+    User.find({}, (err, results) => {
+      if (err) {
+        res.status(400).send({
+          status: 'Failed',
+          message: 'An error has been encountered',
+          details: err + '.'
+        })
+      }
 
-        // if(err) return res.status(400).send('Could not update successfully')
-        res.send(results)
-      })
-      .catch((err) => {
-        res.send(err + ".")
-      })
-
+      res.send(results);
+    });
   } catch (err) {
-    res.send(err + ".--")
+    res.status(500).send({
+      status: 'Failed',
+      message: 'Server connection has failed. Please try again in a moment',
+      details: err + '.'
+    })
   }
+});
+
+
+// Getting one
+// --------------------------------------------------
+route.get('/:id',getUser ,async (req, res) => {
+  res.send(res.user.names);
 
 });
 
-route.post('/signup', async (req, res) => {
+
+// Creating one
+// --------------------------------------------------
+route.post('/', async (req, res) => {
 
 
   try {
@@ -139,16 +93,18 @@ route.post('/signup', async (req, res) => {
       username: req.body.username
     });
 
-    if (emailExist)
-     {return res.send({
-      status: 'Failed',
-      message: 'Account already exist.'
-    });}
-    if (usernameExist)
-    { return res.send({
-      status: 'Failed',
-      message: 'User name already exist'
-    });}
+    if (emailExist) {
+      return res.send({
+        status: 'Failed',
+        message: 'Account already exist.'
+      });
+    }
+    if (usernameExist) {
+      return res.send({
+        status: 'Failed',
+        message: 'User name already exist'
+      });
+    }
 
 
     //encrypt password
@@ -169,14 +125,14 @@ route.post('/signup', async (req, res) => {
 
     await User.create(user)
       .then(() => {
-        res.send({
+        res.status(201).send({
           key: user._id,
           status: 'Successful',
           message: 'User is registered successfully.'
         });
       })
       .catch((err) => {
-        res.send({
+        res.status(400).send({
           status: 'Failed',
           message: 'Process unsuccessful',
           details: err + '.'
@@ -193,4 +149,45 @@ route.post('/signup', async (req, res) => {
 
 })
 
+
+
+// Updating one
+// --------------------------------------------------
+route.patch('/:id', async (req, res) => {
+
+});
+
+// Deleting one
+// --------------------------------------------------
+
+route.delete('/:id', async (req, res) => {
+ 
+  
+});
+
+async function getUser(req, res, next) {
+  let user;
+  try {
+    user = await User.findById(req.params.id);
+    if (user == null) {
+      return res.status(404).send({
+        status: 'Failed',
+        message: 'Request is unsuccessful',
+        details: err + '.'
+      })
+    }
+
+  } catch (err) {
+   return res.status(500).send({
+      status: 'Failed',
+      message: 'B',
+      details: err + '.'
+    })
+  }
+
+  res.user = user;
+
+  next();
+
+}
 module.exports = route;
