@@ -128,7 +128,7 @@ route.post('/', async (req, res) => {
           key: user._id,
           status: 'Successful',
           message: 'User is registered successfully.'
-        });
+        }); 
       })
       .catch((err) => {
         res.status(400).send({
