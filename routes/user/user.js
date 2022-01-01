@@ -67,7 +67,7 @@ route.get('/', async (req, res) => {
 
 // Getting one
 // --------------------------------------------------
-route.get('/:id', getUser, async (req, res) => {
+route.get('/:id',verify, getUser, async (req, res) => {
   res.send(res.client);
 });
 
