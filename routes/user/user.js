@@ -125,7 +125,7 @@ route.post('/', async (req, res) => {
     await User.create(user)
       .then(() => {
         res.status(201).send({
-          key: User._id,
+          key: user._id,
           status: 'Successful',
           message: 'User is registered successfully.'
         });
