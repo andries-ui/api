@@ -64,22 +64,20 @@ route.post('/', async (req, res) => {
       });
     }
 
-    User.findOne({email:req.body.email})
-    .exec((err, res) =>{
-
-      const token = jwt.sign({
-        _id: res._id
-      }, process.env.TOKEN_SECRET);
-  
-      res.header('token', token).send({
-        status: 'Success',
-        message: 'You are signed in',
-        token: token,
-        key: res._id
-      });
-    })
+    
     // create token
-   
+    const token = jwt.sign({
+      _id: user._id
+    }, process.env.TOKEN_SECRET,{
+      expiresIn: 86400
+    });
+
+    res.header('token', token).send({
+      status: 'Success',
+      message: 'You are signed in',
+      token: token,
+      key: useremail._id,
+    });
   } catch (err) {
     res.send({
       status: 'Failed',
