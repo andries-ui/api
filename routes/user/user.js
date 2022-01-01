@@ -69,7 +69,6 @@ route.get('/', async (req, res) => {
 // --------------------------------------------------
 route.get('/:id', getUser, async (req, res) => {
   res.send(res.user);
-
 });
 
 
@@ -223,8 +222,7 @@ async function getUser(req, res, next) {
     if (user == null) {
       return res.status(404).send({
         status: 'Failed',
-        message: 'Request is unsuccessful',
-        details: err + '.'
+        message: 'Request is unsuccessful'
       })
     }
 
