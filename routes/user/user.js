@@ -68,7 +68,7 @@ route.get('/', async (req, res) => {
 // Getting one
 // --------------------------------------------------
 route.get('/:id', getUser, async (req, res) => {
-  res.send(res.user);
+  res.send(res.client);
 });
 
 
@@ -125,7 +125,7 @@ route.post('/', async (req, res) => {
     await User.create(user)
       .then(() => {
         res.status(201).send({
-          key: user._id,
+          key: User._id,
           status: 'Successful',
           message: 'User is registered successfully.'
         });
@@ -152,32 +152,32 @@ route.post('/', async (req, res) => {
 
 // Updating one
 // --------------------------------------------------
-route.patch('/:id', getUser, async (req, res) => {
+route.patch('/:id',verify, getUser, async (req, res) => {
 
   if (req.body.names != null) {
-    res.user.names = req.body.names;
+    res.client.names = req.body.names;
   }
 
   if (req.body.username != null) {
-    res.user.username = req.body.username;
+    res.client.username = req.body.username;
   }
 
   if (req.body.password != null) {
-    res.user.password = req.body.password;
+    res.client.password = req.body.password;
   }
 
   if (req.body.contact != null) {
-    res.user.contact = req.body.contact;
+    res.client.contact = req.body.contact;
   }
 
   if (req.body.email != null) {
-    res.user.names = req.body.email;
+    res.client.names = req.body.email;
   }
 
-  res.user.updatedAt = req.body.updatedAt;
+  res.client.updatedAt = req.body.updatedAt;
 
   try {
-    const updateUser = await res.user.save();
+    const updateUser = await res.client.save();
     res.send({
       status: 'Success',
       message: 'User is updated',
@@ -200,7 +200,7 @@ route.patch('/:id', getUser, async (req, res) => {
 route.delete('/:id', getUser, async (req, res) => {
 
   try {
-    await res.user.remove();
+    await res.client.remove();
     res.send({
       status: 'Success',
       message: 'Account has been deletec',
@@ -216,10 +216,10 @@ route.delete('/:id', getUser, async (req, res) => {
 });
 
 async function getUser(req, res, next) {
-  let user;
+  let client;
   try {
-    user = await User.findById(req.params.id);
-    if (user == null) {
+    client = await User.findById(req.params.id);
+    if (client == null) {
       return res.status(404).send({
         status: 'Failed',
         message: 'Request is unsuccessful'
@@ -234,7 +234,7 @@ async function getUser(req, res, next) {
     })
   }
 
-  res.user = user;
+  res.client = client;
 
   next();
 
