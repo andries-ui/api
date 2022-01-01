@@ -58,7 +58,8 @@ route.get("/getuser:id",  async (req, res) => {
   User.findById(req.body.id, (err, results) => {
     res.send({
       status: 'Successful',
-      message: 'User retrieved'
+      message: 'User retrieved',
+      res: results
     });
   })
   .then((res)=>{
