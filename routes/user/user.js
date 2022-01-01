@@ -67,8 +67,8 @@ route.get('/', async (req, res) => {
 
 // Getting one
 // --------------------------------------------------
-route.get('/:id',getUser ,async (req, res) => {
-  res.send(res.user.names);
+route.get('/:id', getUser, async (req, res) => {
+  res.send(res.user);
 
 });
 
@@ -153,16 +153,67 @@ route.post('/', async (req, res) => {
 
 // Updating one
 // --------------------------------------------------
-route.patch('/:id', async (req, res) => {
+route.patch('/:id', getUser, async (req, res) => {
+
+  if (req.body.names != null) {
+    res.user.names = req.body.names;
+  }
+
+  if (req.body.username != null) {
+    res.user.username = req.body.username;
+  }
+
+  if (req.body.password != null) {
+    res.user.password = req.body.password;
+  }
+
+  if (req.body.contact != null) {
+    res.user.contact = req.body.contact;
+  }
+
+  if (req.body.email != null) {
+    res.user.names = req.body.email;
+  }
+
+  res.user.updatedAt = req.body.updatedAt;
+
+  try {
+    const updateUser = await res.user.save();
+    res.send({
+      status: 'Success',
+      message: 'User is updated',
+      details: updateUser
+    })
+
+  } catch (err) {
+    res.status(400).send({
+      status: 'Failed',
+      message: 'Request is unsuccessful',
+      details: err + '.'
+    })
+  }
 
 });
 
 // Deleting one
 // --------------------------------------------------
 
-route.delete('/:id', async (req, res) => {
- 
-  
+route.delete('/:id', getUser, async (req, res) => {
+
+  try {
+    await res.user.remove();
+    res.send({
+      status: 'Success',
+      message: 'Account has been deletec',
+    })
+  } catch (err) {
+    res.status(500).send({
+      status: 'Failed',
+      message: 'Invalid request',
+      details: err + '.'
+    })
+  }
+
 });
 
 async function getUser(req, res, next) {
@@ -178,9 +229,9 @@ async function getUser(req, res, next) {
     }
 
   } catch (err) {
-   return res.status(500).send({
+    return res.status(500).send({
       status: 'Failed',
-      message: 'B',
+      message: 'Invalid request',
       details: err + '.'
     })
   }
