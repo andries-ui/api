@@ -68,7 +68,15 @@ route.get('/', async (req, res) => {
 // Getting one
 // --------------------------------------------------
 route.get('/:id',verify, getUser, async (req, res) => {
+  try{
   res.send(res.client);
+  }catch(err){
+    return res.send({
+      status: 'Failed',
+      message: 'Account already exist.',
+      details: err
+    });
+  }
 });
 
 
