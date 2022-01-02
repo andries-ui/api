@@ -7,7 +7,7 @@ const route = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-
+//Authentication
 route.post('/', async (req, res) => {
 
   try {
@@ -82,6 +82,54 @@ route.post('/', async (req, res) => {
     res.send({
       status: 'Failed',
       message: 'You are not registered yet.',
+      err: err + "."
+    })
+  }
+
+})
+
+
+//Re-authentication
+route.post('/:id', async (req, res) => {
+
+  try {
+    const user = new User({
+      password: req.body.password,
+      email: req.body.email,
+    });
+
+    const useremail = await User.findOne({
+      _id: req.params.id
+    });
+
+    //verify email or user name
+    if (!useremail) {
+      return res.send({
+        status: 'Failed',
+        message: 'Your Authentication has expired! Please sign in .'
+      });
+    }
+
+    //verify password
+    const validPassword = await bcrypt.compare(req.body.password, useremail.password);
+
+    if (!validPassword) {
+      return res.send({
+        status: 'Failed',
+        message: 'Invalid Password'
+      });
+    }
+
+
+    res.send({
+      status: 'Success',
+      message: 'You are successfully reauthenticated',
+    });
+    
+  } catch (err) {
+    res.send({
+      status: 'Failed',
+      message: 'Invalid password',
       err: err + "."
     })
   }
