@@ -183,7 +183,7 @@ route.patch('/:id', getUser, async (req, res) => {
   }
 
   if (req.body.email != null) {
-    res.client.names = req.body.email;
+    res.client.email = req.body.email;
   }
 
   res.client.updatedAt = new Date();
@@ -192,7 +192,7 @@ route.patch('/:id', getUser, async (req, res) => {
     const updateUser = await res.client.save();
     res.send({
       status: 'Success',
-      message: 'User is updated',
+      message: 'Updated is successful.',
       details: updateUser
     })
 
