@@ -160,7 +160,7 @@ route.post('/', async (req, res) => {
 
 // Updating one
 // --------------------------------------------------
-route.patch('/:id',verify, getUser, async (req, res) => {
+route.patch('/:id', getUser, async (req, res) => {
 
   if (req.body.names != null) {
     res.client.names = req.body.names;
@@ -171,7 +171,11 @@ route.patch('/:id',verify, getUser, async (req, res) => {
   }
 
   if (req.body.password != null) {
-    res.client.password = req.body.password;
+     //encrypt password
+     const salt = await bcrypt.genSalt(10);
+     const hashPassword = await bcrypt.hash(req.body.password, salt);
+ 
+    res.client.password = hashPassword;
   }
 
   if (req.body.contact != null) {
@@ -182,7 +186,7 @@ route.patch('/:id',verify, getUser, async (req, res) => {
     res.client.names = req.body.email;
   }
 
-  res.client.updatedAt = req.body.updatedAt;
+  res.client.updatedAt = new Date();
 
   try {
     const updateUser = await res.client.save();
@@ -239,7 +243,7 @@ async function getUser(req, res, next) {
       status: 'Failed',
       message: 'Invalid request',
       details: err + '.'
-    })
+    });
   }
 
   res.client = client;
