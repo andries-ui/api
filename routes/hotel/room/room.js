@@ -34,63 +34,114 @@ const upload = multer({
 
 
 
-route.get("/", async (req, res) => {
-  Room.find({}, (err, results) => {
-    res.send(results);
-  });
-});
+// Getting all
+// --------------------------------------------------
+route.get('/', async (req, res) => {
+  try {
+    Room.find({}, (err, results) => {
+      if (err) {
+        res.status(400).send({
+          status: 'Failed',
+          message: 'An error has been encountered',
+          details: err + '.'
+        })
+      }
 
-route.get("/:id", async (req, res) => {
-  Room.findById(req.params.id, (err, results) => {
-    res.send(results);
-  });
-});
-
-route.delete("/:id", async (req, res) => {
-  Room.findById(req.params.id)
-    .deleteOne()
-    .exec((err) => {
-      res.send("Removed Successfully");
-      //  if (!err) {
-      //    console.log("Removed Successfully");
-      //    res.send("Removed Successfully");
-      //  } else {
-      //    console.log("Error in removing the entry");
-
-      //    res.send(err);
-      //  }
+      res.send(results);
     });
+  } catch (err) {
+    res.status(500).send({
+      status: 'Failed',
+      message: 'Server connection has failed. Please try again in a moment',
+      details: err + '.'
+    })
+  }
 });
 
-route.delete("/", async (req, res) => {
-  Room.deleteMany().exec((err) => {
-    res.send("Removed Successfully");
-  });
+
+// Getting one
+// --------------------------------------------------
+route.get('/:id', getRating, async (req, res) => {
+  try {
+    res.send(res.client);
+  } catch (err) {
+    return res.send({
+      status: 'Failed',
+      message: 'An error has been encountered',
+      details: err
+    });
+  }
 });
 
-route.patch("/:id", verify, async (req, res) => {
+// Updating one
+// --------------------------------------------------
+route.patch('/:id', getRating, async (req, res) => {
 
-  const updateRoom = new Room({
-    type: req.body.type,
-    price: req.body.price,
-    status: req.body.status,
-    floor: req.body.floor,
-    roomNumber: req.body.roomNumber,
-    hotelId: req.user._id,
-    createdAt: new Date(),
-    updatedAt: null,
-    deletedAt: null,
-  });
 
-  Room.updateOne(req.params.id, updateRoom, (err, results) => {
-    if (!err) {
-      return res.send("updated Successfully");
-    }
-    res.send(err);
-  });
+  if (req.body.type != null) {
+    res.client.type = req.body.type;
+  }
+
+  if (req.body.price != null) {
+    res.client.price = req.body.price;
+  }
+
+  if (req.body.status != null) {
+    res.client.status = req.body.status;
+  }
+
+  if (req.body.floor != null) {
+    res.client.floor = req.body.floor;
+  }
+  
+  if (req.body.roomNumber != null) {
+    res.client.roomNumber = req.body.roomNumber;
+  }
+
+  res.client.updatedAt = new Date();
+
+  try {
+    const updateRoom = await res.client.save();
+    res.send({
+      status: 'Success',
+      message: 'Updated is successful.',
+      details: updateRoom
+    })
+
+  } catch (err) {
+    res.status(400).send({
+      status: 'Failed',
+      message: 'Request is unsuccessful',
+      details: err + '.'
+    })
+  }
+
 });
 
-route.post("/", verify, async (req, res) => {
+// Deleting one
+// --------------------------------------------------
+
+
+route.delete('/:id', getRating, async (req, res) => {
+
+  try {
+    await res.client.remove();
+    res.send({
+      status: 'Success',
+      message: 'Room has been deleted',
+    })
+  } catch (err) {
+    res.status(500).send({
+      status: 'Failed',
+      message: 'Invalid request',
+      details: err + '.'
+    })
+  }
+
+});
+
+
+route.post("/", async (req, res) => {
   try {
     const newRoom = new Room({
       type: req.body.type,
@@ -117,5 +168,31 @@ route.post("/", verify, async (req, res) => {
   }
 });
 
+
+//functions 
+async function getRating(req, res, next) {
+  let client;
+  try {
+    client = await Room.findById(req.params.id);
+    if (client == null) {
+      return res.status(404).send({
+        status: 'Failed',
+        message: 'Request is unsuccessful'
+      })
+    }
+
+  } catch (err) {
+    return res.status(500).send({
+      status: 'Failed',
+      message: 'Invalid request',
+      details: err + '.'
+    });
+  }
+
+  res.client = client;
+
+  next();
+
+}
 
 module.exports = route;

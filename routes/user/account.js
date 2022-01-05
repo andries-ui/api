@@ -5,33 +5,34 @@ const route = express.Router();
 const verify = require('../../validation/sherable/verifyToken');
 
 
+// Get one
+// --------------------------------------------------
+route.get("/:id", async (req, res) => {
+ 
+  try {
+    Account.findOne({_id:req.params.id}, (err, results) => {
+      if (err) {
+        res.status(400).send({
+          status: 'Failed',
+          message: 'An error has been encountered',
+          details: err + '.'
+        })
+      }
 
-route.get("/", verify, async (req, res) => {
-  Account.findById(req.user._id, (err, results) => {
-    res.send(results);
-  });
+      res.send(results);
+    });
+  } catch (err) {
+    res.status(500).send({
+      status: 'Failed',
+      message: 'Server connection has failed. Please try again in a moment',
+      details: err + '.'
+    })
+  }
+  
 });
 
-route.patch("/",verify, async (req, res) => {
-  try{
-  const updateAccount = new Account({
-    blocked: req.body.blocked,
-    active: req.body.active,
-    warning: req.body.warning,
-    updatedAt: new Date(),
-  });
-
-  Account.findByIdAndUpdate(req.user_id, updateAccount, (err, results) => {
-   if (!err) {
-     return res.send(results);
-   }
-   res.send(err + "" );
- });
-} catch (err) {
-  res.send(err +" .");
-}
-});
-
+// Post one
+// --------------------------------------------------
 route.post("/",verify, async (req, res) => {
   try {
 
@@ -39,22 +40,95 @@ route.post("/",verify, async (req, res) => {
       blocked: req.body.blocked,
       active: req.body.active,
       warning: req.body.warning,
-      userId: req.user._id,
+      userId: req.body.id,
       createdAt: new Date(),
       updatedAt: null,
-      deletedAt: null,
     });
 
     await Account.create(newAccount)
       .then(() => {
-        res.send(" Account created");
+        return res.status(201).send({
+          status: 'Success',
+          message: 'account has been created'
+        });
       })
       .catch((err) => {
-        res.send(err);
-        console.log(err);
+        return res.status(400).send({
+          status: 'Failed',
+          message: err
+        });
       });
   } catch (err) {
-    res.send(err +" .");
+    return res.status(400).send({
+      status: 'Failed',
+      message: err
+    });
   }
 });  
+
+// Updating one
+// --------------------------------------------------
+route.patch('/:id', getAccount, async (req, res) => {
+
+
+
+  if (req.body.blocked != null) {
+    res.client.blocked = req.body.blocked;
+  }
+
+  if (req.body.active != null) {
+    res.client.active = req.body.active;
+  }
+
+  if (req.body.warning != null) {
+    res.client.warning = req.body.warning;
+  }
+
+  
+  res.client.updatedAt = new Date();
+
+  try {
+    const updateUser = await res.client.save();
+    res.send({
+      status: 'Success',
+      message: 'Updated is successful.',
+      details: updateUser
+    })
+
+  } catch (err) {
+    res.status(400).send({
+      status: 'Failed',
+      message: 'Request is unsuccessful',
+      details: err + '.'
+    })
+  }
+
+});
+
+//functions 
+async function getAccount(req, res, next) {
+  let client;
+  try {
+    client = await Account.findById(req.params.id);
+    if (client == null) {
+      return res.status(404).send({
+        status: 'Failed',
+        message: 'Request is unsuccessful'
+      })
+    }
+
+  } catch (err) {
+    return res.status(500).send({
+      status: 'Failed',
+      message: 'Invalid request',
+      details: err + '.'
+    });
+  }
+
+  res.client = client;
+
+  next();
+
+}
+
 module.exports = route;

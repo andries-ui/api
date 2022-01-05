@@ -3,51 +3,106 @@ const HotelRating = require("../../module/hotel/rating");
 const route = express.Router();
 const verify = require('../../validation/sherable/verifyToken')
 
-route.get("/",verify, async (req, res) => {
-  HotelRating.find({}, async (err, results) => {
-    res.send(results);
-  });
-});
 
-route.get("/:id",verify, async (req, res) => {
-  HotelRating.findById(req.params.id, (err, results) => {
-    res.send(results);
-  });
-});
 
-route.delete("/:id",verify, async (req, res) => {
-  HotelRating.findById(req.params.id)
-    .deleteOne()
-    .exec((err) => {
-      res.send("Removed Successfully");
+// Getting all
+// --------------------------------------------------
+route.get('/', async (req, res) => {
+  try {
+    HotelRating.find({}, (err, results) => {
+      if (err) {
+        res.status(400).send({
+          status: 'Failed',
+          message: 'An error has been encountered',
+          details: err + '.'
+        })
+      }
+
+      res.send(results);
     });
+  } catch (err) {
+    res.status(500).send({
+      status: 'Failed',
+      message: 'Server connection has failed. Please try again in a moment',
+      details: err + '.'
+    })
+  }
 });
 
-route.delete("/",verify, async (req, res) => {
-  HotelRating.deleteMany().exec((err) => {
-    res.send("Removed Successfully");
-  });
+
+// Getting one
+// --------------------------------------------------
+route.get('/:id', getRating, async (req, res) => {
+  try {
+    res.send(res.client);
+  } catch (err) {
+    return res.send({
+      status: 'Failed',
+      message: 'An error has been encountered',
+      details: err
+    });
+  }
 });
 
-route.patch("/:id",verify, async (req, res) => {
-  const updateHotelRate = new HotelRating({
-    hotelId: req.body.hotelId,
-    ratedStar: req.body.ratedStar,
-    comment: req.body.comment,
-    createdAt: new Date(),
-    updatedAt: null,
-    deletedAt: null,
-  });
+// Updating one
+// --------------------------------------------------
+route.patch('/:id', getRating, async (req, res) => {
 
-  await HotelRating.updateOne(req.params.id, updateHotelRate, (err, results) => {
-    if (!err) {
-      return res.send("updated Successfully");
-    }
-    res.send(err);
-  });
+
+  if (req.body.ratedStar != null) {
+    res.client.ratedStar = req.body.ratedStar;
+  }
+
+  if (req.body.comment != null) {
+    res.client.comment = req.body.comment;
+  }
+
+  
+  res.client.updatedAt = new Date();
+
+  try {
+    const updateUser = await res.client.save();
+    res.send({
+      status: 'Success',
+      message: 'Updated is successful.',
+      details: updateUser
+    })
+
+  } catch (err) {
+    res.status(400).send({
+      status: 'Failed',
+      message: 'Request is unsuccessful',
+      details: err + '.'
+    })
+  }
+
 });
 
-route.post("/",verify, async (req, res) => {
+// Deleting one
+// --------------------------------------------------
+
+
+route.delete('/:id', getRating, async (req, res) => {
+
+  try {
+    await res.client.remove();
+    res.send({
+      status: 'Success',
+      message: 'Hotel rating has been deleted',
+    })
+  } catch (err) {
+    res.status(500).send({
+      status: 'Failed',
+      message: 'Invalid request',
+      details: err + '.'
+    })
+  }
+
+});
+
+
+
+route.post("/", async (req, res) => {
   try {
     const newHotelRate = new HotelRating({
       hotelId: req.user._id,
@@ -60,16 +115,52 @@ route.post("/",verify, async (req, res) => {
 
     await HotelRating.create(newHotelRate)
       .then(() => {
-        res.send("hotel is rated");
+        res.send({
+          status: 'Success',
+          message: 'Posted',
+        })
       })
       .catch((err) => {
-        res.send(err + "- ");
-        console.log(err + "- ");
+        res.send({
+          status: 'Failed',
+          message: 'Could not submit the rating to the server, please try again in a moment',
+          details: err +'.'
+        })
       });
   } catch (err) {
      
-    res.send(err + "- ");
+    res.send({
+      status: 'Failed',
+      message: 'Failed to connect to the server. Please try in a moment',
+      details: err +'.'
+    })
   }
 });
+
+//functions 
+async function getRating(req, res, next) {
+  let client;
+  try {
+    client = await HotelRating.findById(req.params.id);
+    if (client == null) {
+      return res.status(404).send({
+        status: 'Failed',
+        message: 'Request is unsuccessful'
+      })
+    }
+
+  } catch (err) {
+    return res.status(500).send({
+      status: 'Failed',
+      message: 'Invalid request',
+      details: err + '.'
+    });
+  }
+
+  res.client = client;
+
+  next();
+
+}
 
 module.exports = route;

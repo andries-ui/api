@@ -20,6 +20,7 @@ const loginRoute = require("./routes/user/login")
 const hotelloginRoute = require("./routes/hotel/login")
 const locationRoute = require("./routes/sherable/location")
 const employeeRoute = require("./routes/hotel/employee/employee")
+const employeeLoginRoute = require("./routes/hotel/employee/login")
 const propertyRoute = require("./routes/hotel/room/property");
 
 
@@ -75,6 +76,7 @@ app.use("/hotel", hotelRoute);
 app.use("/hotelRating", hotelRatingRoute);
 app.use('/hotelLogin', hotelloginRoute)
 app.use('/employee', employeeRoute)
+app.use('/employeeLogin', employeeLoginRoute)
 
 //room routes
 app.use("/roomRating", roomRatingRoute);

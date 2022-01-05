@@ -15,7 +15,8 @@ const userShema = mongoose.Schema({
     required: true
   },
    url: {
-    type: String,
+    data: Buffer,
+    contentType: String
   },
   email: {
     type: String,
@@ -29,6 +30,9 @@ const userShema = mongoose.Schema({
   type: {
     type: String,
     required: true
+  },
+  verified: {
+    type: Boolean,
   },
   createdAt: {
     type: String

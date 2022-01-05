@@ -7,8 +7,8 @@ const hotelSchema = mongoose.Schema({
     require: true,
   },
   url: {
-    type: String,
-    required: true,
+    data: Buffer,
+    contentType: String
   },
   taxNumber: {
     type: String,
@@ -25,6 +25,9 @@ const hotelSchema = mongoose.Schema({
   password: {
     type: String,
     require: true,
+  },
+  verified: {
+    type: Boolean,
   },
   companyId: {
     type: String,

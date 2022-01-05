@@ -1,5 +1,6 @@
 const express = require('express');
 const User = require('../../module/user/user');
+const Verification = require('../../module/user/verification')
 const {
   userValidation,
   userLogin
@@ -9,13 +10,39 @@ const bcrypt = require('bcryptjs');
 const verify = require('../../validation/sherable/verifyToken');
 const multer = require('multer');
 const Joi = require('@hapi/joi');
+const nodemailer = require('nodemailer');
+
+require("dotenv").config();
+
+//nodemailer transporter
+let transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.AUTH_EMAIL,
+    pass: process.env.PASSWORD
+  }
+})
+
+transporter.verify((err, success) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log('Ready');
+  }
+
+})
+
+//----------------------------------------------------
+
+
+//multer storage config
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, './uploads/user/');
+    callback(null, 'uploads/user/');
   },
   filename: (req, file, callback) => {
-    callback(null, file.originalname + new Date());
+    callback(null, file.originalname);
   }
 });
 
@@ -36,7 +63,7 @@ const upload = multer({
   },
   fileFilter: fileFilter
 });
-
+//-------------------------------------------------
 
 
 
@@ -68,9 +95,9 @@ route.get('/', async (req, res) => {
 // Getting one
 // --------------------------------------------------
 route.get('/:id', getUser, async (req, res) => {
-  try{
-  res.send(res.client);
-  }catch(err){
+  try {
+    res.send(res.client);
+  } catch (err) {
     return res.send({
       status: 'Failed',
       message: 'Account already exist.',
@@ -78,6 +105,110 @@ route.get('/:id', getUser, async (req, res) => {
     });
   }
 });
+
+route.get('/verify/:id', async (req, res) => {
+
+  const {
+    id
+  } = req.params;
+
+  Verification.find({
+      id
+    })
+    .then((results) => {
+
+      if (results.length < 0) {
+
+        const {
+          expiresAt
+        } = results[0];
+
+        if (expiresAt < Date.now()) {
+          Verification.deleteOne(id)
+            .then(() => {
+              User.deleteOne({
+                  _id: id
+                })
+                .then(() => {
+                  return res.send({
+                    status: 'Failed',
+                    message: 'Link has expired, Please signup again.',
+                  });
+                })
+                .catch((err) => {
+                  console.log(err);
+                  return res.send({
+                    status: 'Failed',
+                    message: 'An error occured while clearing expired user verification',
+                  });
+                })
+            })
+            .catch((err) => {
+              console.log(err);
+              return res.send({
+                status: 'Failed',
+                message: 'An error occured while clearing expired user verification',
+                });
+            })
+        }
+
+      } else {
+
+        if(results[0].pin === req.body.pin){
+    
+        if (results) {
+          User.updateOne({
+              _id: id
+            }, {
+              verified: true
+            })
+            .then(() => {
+              Verification.deleteOne({id})
+                .then(() => {
+                  return res.send({
+                    status: 'Success',
+                    message: 'Email is successfully registered'
+                     });
+                })
+                .catch((err) => {
+                  return res.send({
+                    status: 'Failed',
+                    message: 'An error occured while clearing expired user verification',
+                    err: err + '.'
+                     });
+            });
+          })
+            .catch((err) => {
+              return res.send({
+                status: 'Failed',
+                message: 'Error occured while updating user record verified',
+                  });
+            })
+        } else {
+          return res.send({
+            status: 'Failed',
+            message: 'Invalid varification details. Please refere to your inbox.',
+               });
+        }
+      }else{
+        return res.send({
+          status: 'Failed',
+          message: 'Invalid pin. Please verify the pin from the email you recieved.',
+             });
+      }
+
+      }
+
+
+    })
+    .catch((err) => {
+      return res.send({
+        status: 'Failed',
+        message: 'Account already exist.',
+        details: err
+      });
+    })
+})
 
 
 // Creating one
@@ -125,18 +256,18 @@ route.post('/', async (req, res) => {
       contact: req.body.contact,
       email: req.body.email,
       type: req.body.type,
+      verified: false,
       createdAt: new Date(),
       updatedAt: null,
       deletedAt: null
     });
 
     await User.create(user)
-      .then(() => {
-        res.status(201).send({
-          key: user._id,
-          status: 'Successful',
-          message: 'User is registered successfully.'
-        }); 
+      .then((results) => {
+
+
+        sendVerificationEmail(results, res)
+
       })
       .catch((err) => {
         res.status(400).send({
@@ -157,10 +288,16 @@ route.post('/', async (req, res) => {
 })
 
 
-
 // Updating one
 // --------------------------------------------------
-route.patch('/:id', getUser, async (req, res) => {
+route.patch('/:id', upload.single('image'), getUser, async (req, res) => {
+
+  if (req.file.filename != null) {
+    res.client.url = {
+      data: req.file.filename,
+      contentType: 'image/png'
+    }
+  }
 
   if (req.body.names != null) {
     res.client.names = req.body.names;
@@ -171,10 +308,10 @@ route.patch('/:id', getUser, async (req, res) => {
   }
 
   if (req.body.password != null) {
-     //encrypt password
-     const salt = await bcrypt.genSalt(10);
-     const hashPassword = await bcrypt.hash(req.body.password, salt);
- 
+    //encrypt password
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
+
     res.client.password = hashPassword;
   }
 
@@ -227,6 +364,7 @@ route.delete('/:id', getUser, async (req, res) => {
 
 });
 
+//functions 
 async function getUser(req, res, next) {
   let client;
   try {
@@ -251,4 +389,57 @@ async function getUser(req, res, next) {
   next();
 
 }
+
+const sendVerificationEmail = (({
+_id,
+email
+}, res) => {
+
+
+let pin = Math.floor((Math.random() * 99000) + 10000);
+
+const mailOptions = {
+  from: process.env.AUTH_EMAIL,
+  to: email,
+  subject: 'Sunstar Email verification',
+  html: `<p>Verify your e-mail address in order to complete your registration</p> 
+          <p>This pin expires in <b>6 hours and if it does your account will be forfaited</b></p>
+          <p> <h3><b>${pin}</b></h3> is your OTP to procceed.</p>
+          
+          <h5>Reguards: SunStar development team:</h5>`
+};
+
+
+const newVerification = new Verification({
+  userId: _id,
+  pin: pin,
+  createdAt: Date.now(),
+  expiresAt: Date.now() + 216000000
+})
+
+newVerification.save().then(() => {
+  transporter.sendMail(mailOptions)
+    .then(() => {
+      res.status(400).send({
+        status: 'Pending',
+        message: "Email is successfully sent.",
+        key:_id
+      });
+    })
+    .catch((err) => {
+      res.status(400).send({
+        status: 'Failed',
+        message: err
+      });
+    })
+}).catch((err) => {
+  res.status(201).send({
+    status: 'Failed',
+    message: "Couldn't save verification record"
+  });
+})
+})
+
+
+//--------------------------------------------------------
 module.exports = route;

@@ -1,64 +1,112 @@
 const express = require('express');
 const Reservation = require('../../module/externals/tripReservations');
-const schema = require('../../module/user/user')
 const route = express.Router();
 const verify = require('../../validation/sherable/verifyToken');
 
 
-route.get("/", verify,async (req, res) => {
-   Reservation.find({}, async (err, results) => {
-    res.send(results);
-  });
-});
+// Getting all
+// --------------------------------------------------
+route.get('/', async (req, res) => {
+  try {
+    Reservation.find({}, (err, results) => {
+      if (err) {
+        res.status(400).send({
+          status: 'Failed',
+          message: 'An error has been encountered',
+          details: err + '.'
+        })
+      }
 
-route.get("/:id", verify,async (req, res) => {
-  Reservation.findById(req.params.id, (err, results) => {
-    res.send(results);
-  });
-});
-
-route.delete("/:id",verify, async (req, res) => {
-  Reservation.findById(req.params.id)
-    .deleteOne()
-    .exec((err) => {
-      res.send("Removed Successfully");
+      res.send(results);
     });
+  } catch (err) {
+    res.status(500).send({
+      status: 'Failed',
+      message: 'Server connection has failed. Please try again in a moment',
+      details: err + '.'
+    })
+  }
 });
 
 
-route.patch("/:id",verify,async (req, res) => {
-  const updateReservation = new Reservation({
-    
-    driverId: req.body.driverId,
-    vehicleId: req.body.vehicleId,
-    pickupDate: req.body.pickupDate,
-    pickupAddress: req.body.pickupAddress,
-    city: req.body.city,
-    status: req.body.status,
-    country: req.body.country,
-    latitude: req.body.latitude,
-    longitude: req.body.longitude,
-    createdAt: new Date(),
-    updatedAt: null,
-    deletedAt: null,
-  });
-
-  Reservation.updateOne(
-   req.params.id,
-   updateReservation,
-   (err, results) => {
-     if (!err) {
-       return res.send("updated Successfully");
-     }
-     res.send(err);
-   }
- );
+// Getting one
+// --------------------------------------------------
+route.get('/:id', getReservations, async (req, res) => {
+  try {
+    res.send(res.client);
+  } catch (err) {
+    return res.send({
+      status: 'Failed',
+      message: 'An error has been encountered',
+      details: err
+    });
+  }
 });
 
-route.post("/",verify, async (req, res) => {
+// Updating one
+// --------------------------------------------------
+route.patch('/:id', getReservations, async (req, res) => {
+
+
+  if (req.body.status != null) {
+    res.client.status = req.body.status;
+  }
+
+  if (req.body.total != null) {
+    res.client.total = req.body.total;
+  }
+
+  if (req.body.amount != null) {
+    res.client.amount = req.body.amount;
+  }
+
+
+  
+  res.client.updatedAt = new Date();
+
+  try {
+    const updateUser = await res.client.save();
+    res.send({
+      status: 'Success',
+      message: 'Updated is successful.',
+      details: updateUser
+    })
+
+  } catch (err) {
+    res.status(400).send({
+      status: 'Failed',
+      message: 'Request is unsuccessful',
+      details: err + '.'
+    })
+  }
+
+});
+
+// Deleting one
+// --------------------------------------------------
+
+
+route.delete('/:id', getReservations, async (req, res) => {
+
+  try {
+    await res.client.remove();
+    res.send({
+      status: 'Success',
+      message: 'Deleted',
+    })
+  } catch (err) {
+    res.status(500).send({
+      status: 'Failed',
+      message: 'Invalid request',
+      details: err + '.'
+    })
+  }
+
+});
+
+route.post("/", async (req, res) => {
   try {
     const newReservation = new Reservation({
-      
       driverId: req.body.driverId,
       userId: req.user._id,
       vehicleId: req.body.vehicleId,
@@ -76,14 +124,54 @@ route.post("/",verify, async (req, res) => {
 
     await Reservation.create(newReservation)
       .then(() => {
-        res.send("Reserved");
+        res.send({
+          status: 'Success',
+          message: 'Posted',
+        })
       })
       .catch((err) => {
-        res.send(err);
-        console.log(err);
+        res.send({
+          status: 'Failed',
+          message: 'Could not submit the rating to the server, please try again in a moment',
+          details: err +'.'
+        })
       });
   } catch (err) {
-    "err ==, " + err;
+     
+    res.send({
+      status: 'Failed',
+      message: 'Failed to connect to the server. Please try in a moment',
+      details: err +'.'
+    })
   }
 });
+
+//functions 
+async function getReservations(req, res, next) {
+  let client;
+  try {
+    client = await Reservation.findById(req.params.id);
+    if (client == null) {
+      return res.status(404).send({
+        status: 'Failed',
+        message: 'Request is unsuccessful'
+      })
+    }
+
+  } catch (err) {
+    return res.status(500).send({
+      status: 'Failed',
+      message: 'Invalid request',
+      details: err + '.'
+    });
+  }
+
+  res.client = client;
+
+  next();
+
+}
+
+
+
 module.exports = route;
