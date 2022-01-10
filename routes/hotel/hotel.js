@@ -151,8 +151,7 @@ route.post('/verify/:id', async (req, res) => {
 
       } else {
 
-        console.log(results[0].pin + ' === ' + req.body.pin + " == " + id);
-        if (results[0].pin === req.body.pin) {
+        if (results[0].pin == req.body.pin) {
 
           if (results) {
             Hotel.updateOne({
@@ -238,7 +237,7 @@ route.post('/', async (req, res) => {
       });
     }
 
-    
+
 
     //encrypt password
     const salt = await bcrypt.genSalt(10);
@@ -287,7 +286,7 @@ route.post('/', async (req, res) => {
 // --------------------------------------------------
 route.patch('/:id', upload.single('image'), getHotel, async (req, res) => {
 
-  
+
 
   if (req.body.name != null) {
     res.client.name = req.body.name;
@@ -318,7 +317,7 @@ route.patch('/:id', upload.single('image'), getHotel, async (req, res) => {
     res.client.password = hashPassword;
   }
 
-  
+
   res.client.updatedAt = new Date();
 
   try {
@@ -438,9 +437,9 @@ const sendVerificationEmail = (({
 
 const sendEmail = ((results, res) => {
 
-    const {email, name} = results[0];
-    
-    console.log(password);
+  const { email, name } = results[0];
+
+  console.log(password);
 
   const mailOptions = {
     from: process.env.AUTH_EMAIL,
