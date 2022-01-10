@@ -107,7 +107,7 @@ route.get('/:id', getHotel, async (req, res) => {
   }
 });
 
-route.get('/verify/:id', async (req, res) => {
+route.post('/verify/:id', async (req, res) => {
 
   const { id } = req.params;
 
