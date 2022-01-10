@@ -416,7 +416,7 @@ const sendVerificationEmail = (({
   newVerification.save().then(() => {
     transporter.sendMail(mailOptions)
       .then(() => {
-        res.status(400).send({
+        res.status(201).send({
           status: 'Pending',
           message: "Email is successfully sent.",
           key: _id
@@ -429,7 +429,7 @@ const sendVerificationEmail = (({
         });
       })
   }).catch((err) => {
-    res.status(201).send({
+    res.status(400).send({
       status: 'Failed',
       message: "Couldn't save verification record"
     });
