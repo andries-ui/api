@@ -35,7 +35,6 @@ const hotelSchema = mongoose.Schema({
   },
   managerId: {
     type: String,
-    required: true,
   },
   createdAt: {
     type: Date,
