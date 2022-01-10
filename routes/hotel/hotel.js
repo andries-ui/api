@@ -253,7 +253,6 @@ route.post('/', async (req, res) => {
       password: hashPassword,
       verified: false,
       companyId: req.body.companyId,
-      managerId: req.body.managerId,
       createdAt: new Date(),
       updatedAt: null,
       deletedAt: null,
