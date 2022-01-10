@@ -2,7 +2,9 @@ const express = require('express')
 const mongoose = require('mongoose');
 require('dotenv').config();
 const app = express();
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const cors = require('cors');
+
 
 //importing routes
 const userRoute = require('./routes/user/user');
@@ -59,7 +61,7 @@ mongoose
 //==========================================================================
 // Middlewears
 //==========================================================================
-
+app.use(cors());
 app.use('uploads/hotel/logo', express.static('uploads/hotel/logo'));
 app.use(bodyParser.json());
 
