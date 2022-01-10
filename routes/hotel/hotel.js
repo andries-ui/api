@@ -201,7 +201,7 @@ route.post('/verify/:id', async (req, res) => {
         else {
           return res.send({
             status: 'Failed',
-            message: 'Invalid pin. Please verify the pin from the email you recieved.',
+            message: `Invalid pin. Please verify the pin from the email you recieved. ${results[0].pin + ' === ' + req.body.pin + " == " + id}`,
           });
         }
 
