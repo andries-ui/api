@@ -166,6 +166,10 @@ route.post('/verify/:id', async (req, res) => {
                     Hotel.find({ _id: id })
                       .then((results) => {
                         sendEmail(results, res);
+                        return res.send({
+                          status: 'Success',
+                          message: `Comfirmed successfully`,
+                        });
                       }).catch((err) => {
                         return res.send({
                           status: 'Failed',
