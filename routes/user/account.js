@@ -40,7 +40,7 @@ route.post("/", async (req, res) => {
       blocked: false,
       active: true,
       warning: 0,
-      userId: req.body.id,
+      userId: req.body.userId,
       createdAt: new Date(),
       updatedAt: null,
     });
