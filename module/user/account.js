@@ -14,7 +14,7 @@ const accountSchema = mongoose.Schema({
     default: true,
   },
   warning: {
-    type: String,
+    type: Number,
     required: true,
     default: 0,
   },
