@@ -25,7 +25,6 @@ const propertySchema = mongoose.Schema({
   desc: {
     contentType: String,
     required: true,
-    default: false
   },
   roomId: {
     type: String,
