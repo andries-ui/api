@@ -37,9 +37,9 @@ route.post("/", async (req, res) => {
   try {
 
     const newAccount = new Account({
-      blocked: req.body.blocked,
-      active: req.body.active,
-      warning: req.body.warning,
+      blocked: false,
+      active: true,
+      warning: 0,
       userId: req.body.id,
       createdAt: new Date(),
       updatedAt: null,
