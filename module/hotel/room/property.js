@@ -23,7 +23,7 @@ const propertySchema = mongoose.Schema({
     require: true,
   },
   desc: {
-    type: String,
+    contentType: String,
     required: true,
     default: false
   },

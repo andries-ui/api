@@ -420,7 +420,7 @@ const newVerification = new Verification({
 newVerification.save().then(() => {
   transporter.sendMail(mailOptions)
     .then(() => {
-      res.status(400).send({
+      res.status(201).send({
         status: 'Pending',
         message: "Email is successfully sent.",
         key:_id
