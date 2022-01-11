@@ -278,7 +278,7 @@ route.post('/', async (req, res) => {
       })
 
   } catch (err) {
-    res.send({
+    res.status(400).send({
       status: 'Failed',
       message: 'Faild to communicate with the server',
       details: err + '.'
