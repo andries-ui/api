@@ -23,8 +23,7 @@ const propertySchema = mongoose.Schema({
     require: true,
   },
   desc: {
-    contentType: String,
-    required: true,
+    contentType: String
   },
   roomId: {
     type: String,
