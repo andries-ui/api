@@ -154,7 +154,7 @@ route.get('/verify/:id', async (req, res) => {
 
       } else {
 
-        if(results[0].pin === req.body.pin){
+        if(results[0].pin == req.body.pin){
     
         if (results) {
           User.updateOne({
