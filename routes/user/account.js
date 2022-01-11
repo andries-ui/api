@@ -33,7 +33,7 @@ route.get("/:id", async (req, res) => {
 
 // Post one
 // --------------------------------------------------
-route.post("/",verify, async (req, res) => {
+route.post("/", async (req, res) => {
   try {
 
     const newAccount = new Account({

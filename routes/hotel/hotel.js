@@ -178,7 +178,6 @@ route.post('/verify/:id', async (req, res) => {
                         });
                       });
 
-
                   })
                   .catch((err) => {
                     return res.send({
