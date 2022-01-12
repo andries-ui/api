@@ -110,6 +110,7 @@ route.post('/', async (req, res) => {
         message: 'You are signed in',
         token: token,
         key: useremail._id,
+        updatedAt: useremail.updatedAt
       });
     }
 
