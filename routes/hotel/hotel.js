@@ -34,7 +34,7 @@ transporter.verify((err, success) => {
 //----------------------------------------------------
 
 
-var password = Math.random().toString(36).slice(-16)+ "838676";
+var password = Math.random().toString(36).slice(-12);
 
 //multer storage config
 
