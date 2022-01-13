@@ -127,7 +127,7 @@ route.post('/', async (req, res) => {
 
 
 //Re-authentication
-route.post('/:id', async (req, res) => {
+route.post('/reauth/:id', async (req, res) => {
 
   try {
     const hotel = new Hotel({
@@ -174,27 +174,30 @@ route.post('/:id', async (req, res) => {
 })
 
 // Update/ Reset passeord
-route.get('/', async (req, res) => {
+route.post('/comfirm', async (req, res) => {
 
 
   const hotelprofile = await Hotel.findOne({
     email: req.body.email
   });
 
-  if (!hotelprofile) {
+  if(hotelprofile.companyId == req.body.companyId){
+    
+    sendVerificationEmail(hotelprofile, res);
+  
+  }else{
     return res.send({
       status: 'Failed',
-      message: 'Oops! this account does not exist. please signup to gain access.'
+      message: 'Access not granted ,comfirm your details and try again.',
+      profile: hotelprofile
     });
   }
-
-  sendVerificationEmail(hotelprofile, res);
 
 
 });
 
 
-route.get('/verify/:id', async (req, res) => {
+route.post('/verify/:id', async (req, res) => {
 
   const {
     id
@@ -334,7 +337,7 @@ const sendVerificationEmail = (({
       .then(() => {
         return res.status(400).send({
           status: 'Pending',
-          message: "Email is successfully sent.",
+          message: "Access granted, Check your emails for a pin.",
           key: _id
         });
       })
