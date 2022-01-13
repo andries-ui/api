@@ -409,6 +409,9 @@ const mailOptions = {
           <h5>Reguards: SunStar development team:</h5>`
 };
 
+await Verification.remove({
+  userId: _id
+});
 
 const newVerification = new Verification({
   userId: _id,

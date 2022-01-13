@@ -181,6 +181,14 @@ route.post('/comfirm', async (req, res) => {
     email: req.body.email
   });
 
+if(!hotelprofile){ 
+  return res.send({
+  status: 'Failed',
+  message: 'Oops! Account was not found!',
+  details: hotelprofile
+});}
+
+
   if(hotelprofile.companyId == req.body.companyId){
     
     sendVerificationEmail(hotelprofile, res);
@@ -188,8 +196,7 @@ route.post('/comfirm', async (req, res) => {
   }else{
     return res.send({
       status: 'Failed',
-      message: 'Access not granted ,comfirm your details and try again.',
-      profile: hotelprofile
+      message: 'Access not granted ,comfirm your details and try again.'
     });
   }
 
@@ -305,10 +312,13 @@ async function gethotel(req, res, next) {
 }
 
 
-const sendVerificationEmail = (({
-  _id,
-  email
-}, res) => {
+const sendVerificationEmail = (async(results, res) => {
+
+
+  const {
+    _id,
+    email
+  } = results;
 
 try{
   let pin = Math.floor((Math.random() * 99000) + 10000);
@@ -324,13 +334,19 @@ try{
           <h5>Reguards: SunStar development team:</h5>`
   };
 
+ await Verification.remove({
+    userId: _id._id
+  });
+
+
 
   const newVerification = new Verification({
-    userId: _id,
+    userId: _id._id,
     pin: pin,
     createdAt: Date.now(),
     expiresAt: Date.now() + 7200000
   })
+
 
   newVerification.save().then(() => {
     transporter.sendMail(mailOptions)
