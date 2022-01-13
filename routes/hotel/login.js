@@ -310,7 +310,7 @@ const sendVerificationEmail = (({
   email
 }, res) => {
 
-
+try{
   let pin = Math.floor((Math.random() * 99000) + 10000);
 
   const mailOptions = {
@@ -353,6 +353,13 @@ const sendVerificationEmail = (({
       message: "Couldn't save verification record"
     });
   })
+}catch(err){
+  return res.status(201).send({
+    status: 'Failed',
+    message: "Error encountered with the sever, please try againe later",
+    details: err
+  });
+}
 })
 
 
