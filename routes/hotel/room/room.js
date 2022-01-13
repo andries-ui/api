@@ -61,6 +61,14 @@ route.get('/', async (req, res) => {
 
 // Getting one
 // --------------------------------------------------
+
+// route.get("/find", async (req, res)=>{
+//   Room.find({name: req.body.name})
+// })
+
+
+// Getting one
+// --------------------------------------------------
 route.get('/:id', getRating, async (req, res) => {
   try {
     res.send(res.client);

@@ -1,5 +1,4 @@
 const express = require('express');
-const User = require('../../module/user/user');
 const {
   userLogin
 } = require('../../validation/externals/user');
@@ -8,6 +7,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const Verification = require('../../module/user/verification');
+const Hotel = require('../../module/hotel/hotel');
 
 require("dotenv").config();
 
@@ -36,24 +36,24 @@ transporter.verify((err, success) => {
 route.post('/', async (req, res) => {
 
   try {
-    const user = new User({
+    const hotel = new Hotel({
       password: req.body.password,
       email: req.body.email,
     });
 
     // const 
     //   err
-    //  = userLogin(req.body);
+    //  = hotelLogin(req.body);
 
     // if (err) return res.status(400).send(err.error.details[0].message);
 
-    // registered user
-    const useremail = await User.findOne({
+    // registered hotel
+    const hotelemail = await Hotel.findOne({
       email: req.body.email
     });
 
-    //verify email or user name
-    if (!useremail) {
+    //verify email or hotel name
+    if (!hotelemail) {
       return res.send({
         status: 'Failed',
         message: 'You are not registered yet.'
@@ -62,17 +62,17 @@ route.post('/', async (req, res) => {
 
     // const 
     //   err
-    //  = userLogin(req.body);
+    //  = hotelLogin(req.body);
 
     // if (err) return res.status(400).send(err.error.details[0].message);
 
-    // registered user
-    const type = await User.findOne({
+    // registered hotel
+    const type = await Hotel.findOne({
       type: req.body.type
     });
 
 
-    //verify email or user name
+    //verify email or hotel name
     if (type === "client") {
       return res.send({
         status: 'Failed',
@@ -80,7 +80,7 @@ route.post('/', async (req, res) => {
       });
     }
 
-    if (useremail.verified == false) {
+    if (hotelemail.verified == false) {
       return res.send({
         status: 'Failed',
         message: 'This account is not verified, Please refere to your inbox for the pin.',
@@ -88,7 +88,7 @@ route.post('/', async (req, res) => {
     } else {
 
       //verify password
-      const validPassword = await bcrypt.compare(req.body.password, useremail.password);
+      const validPassword = await bcrypt.compare(req.body.password, hotelemail.password);
 
       if (!validPassword) {
         return res.send({
@@ -100,7 +100,7 @@ route.post('/', async (req, res) => {
 
       // create token
       const token = jwt.sign({
-        _id: user._id
+        _id: hotel._id
       }, process.env.TOKEN_SECRET, {
         expiresIn: 86400
       });
@@ -109,8 +109,8 @@ route.post('/', async (req, res) => {
         status: 'Success',
         message: 'You are signed in',
         token: token,
-        key: useremail._id,
-        updatedAt: useremail.updatedAt
+        key: hotelemail._id,
+        updatedAt: hotelemail.updatedAt
       });
     }
 
@@ -130,17 +130,17 @@ route.post('/', async (req, res) => {
 route.post('/:id', async (req, res) => {
 
   try {
-    const user = new User({
+    const hotel = new Hotel({
       password: req.body.password,
       email: req.body.email,
     });
 
-    const useremail = await User.findOne({
+    const hotelemail = await Hotel.findOne({
       _id: req.params.id
     });
 
-    //verify email or user name
-    if (!useremail) {
+    //verify email or hotel name
+    if (!hotelemail) {
       return res.send({
         status: 'Failed',
         message: 'Your Authentication has expired! Please sign in .'
@@ -148,7 +148,7 @@ route.post('/:id', async (req, res) => {
     }
 
     //verify password
-    const validPassword = await bcrypt.compare(req.body.password, useremail.password);
+    const validPassword = await bcrypt.compare(req.body.password, hotelemail.password);
 
     if (!validPassword) {
       return res.send({
@@ -177,18 +177,18 @@ route.post('/:id', async (req, res) => {
 route.get('/', async (req, res) => {
 
 
-  const userprofile = await User.findOne({
+  const hotelprofile = await Hotel.findOne({
     email: req.body.email
   });
 
-  if (!userprofile) {
+  if (!hotelprofile) {
     return res.send({
       status: 'Failed',
       message: 'Oops! this account does not exist. please signup to gain access.'
     });
   }
 
-  sendVerificationEmail(userprofile, res);
+  sendVerificationEmail(hotelprofile, res);
 
 
 });
@@ -224,7 +224,7 @@ route.get('/verify/:id', async (req, res) => {
               console.log(err);
               return res.send({
                 status: 'Failed',
-                message: 'An error occured while clearing expired user verification',
+                message: 'An error occured while clearing expired hotel verification',
               });
             });
         }
@@ -244,7 +244,7 @@ route.get('/verify/:id', async (req, res) => {
               .catch((err) => {
                 return res.send({
                   status: 'Failed',
-                  message: 'An error occured while clearing expired user verification',
+                  message: 'An error occured while clearing expired hotel verification',
                   err: err + '.'
                 });
               });
@@ -276,10 +276,10 @@ route.get('/verify/:id', async (req, res) => {
 })
 
 //functions 
-async function getUser(req, res, next) {
+async function gethotel(req, res, next) {
   var client;
   try {
-    client = await User.findById(req.params.id);
+    client = await hotel.findById(req.params.id);
     if (client == null) {
       return res.status(404).send({
         status: 'Failed',
