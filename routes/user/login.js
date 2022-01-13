@@ -300,7 +300,7 @@ async function getUser(req, res, next) {
 
 }
 
-const sendVerificationEmail = (({
+const sendVerificationEmail = (async({
   _id,
   email
 }, res) => {
