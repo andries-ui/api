@@ -176,7 +176,6 @@ route.post('/reauth/:id', async (req, res) => {
 // Update/ Reset passeord
 route.post('/comfirm', async (req, res) => {
 
-
   const hotelprofile = await Hotel.findOne({
     email: req.body.email
   });
@@ -196,11 +195,10 @@ if(!hotelprofile){
   }else{
     return res.send({
       status: 'Failed',
-      message: 'Access not granted ,comfirm your details and try again.'
+      message: 'Access not granted ,comfirm your details and try again.',
+      details: {DB:hotelprofile.companyId ,Data: req.body.companyId}
     });
   }
-
-
 });
 
 
@@ -351,7 +349,7 @@ try{
   newVerification.save().then(() => {
     transporter.sendMail(mailOptions)
       .then(() => {
-        return res.status(400).send({
+        return res.status(201).send({
           status: 'Pending',
           message: "Access granted, Check your emails for a pin.",
           key: _id

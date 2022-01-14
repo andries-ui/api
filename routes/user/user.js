@@ -66,7 +66,6 @@ const upload = multer({
 //-------------------------------------------------
 
 
-
 // Getting all
 // --------------------------------------------------
 route.get('/', async (req, res) => {
@@ -264,7 +263,6 @@ route.post('/', async (req, res) => {
 
     await User.create(user)
       .then((results) => {
-
 
         sendVerificationEmail(results, res)
 
