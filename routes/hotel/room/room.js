@@ -148,13 +148,12 @@ route.delete('/:id', getRating, async (req, res) => {
 
 });
 
-
 route.post("/", async (req, res) => {
   try {
     const newRoom = new Room({
       type: req.body.type,
       price: req.body.price,
-      status: req.body.status,
+      status: true,
       floor: req.body.floor,
       roomNumber: req.body.roomNumber,
       hotelId: req.user._id,
@@ -175,7 +174,6 @@ route.post("/", async (req, res) => {
     res.send(err +"-");
   }
 });
-
 
 //functions 
 async function getRating(req, res, next) {

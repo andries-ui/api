@@ -59,7 +59,7 @@ route.delete("/",verify, async (req, res) => {
   });
 });
 
-route.patch("/:id",verify, async (req, res) => {
+route.patch("/:id", async (req, res) => {
 
   const updateProperty = new Property({
     bedtype: req.body.bedtype,
@@ -68,6 +68,7 @@ route.patch("/:id",verify, async (req, res) => {
     packing: req.body.packing,
     numberOfBed: req.body.numberOfBed,
     desc: req.body.desc,
+    images: req.body.images,
     roomId: req.body.roomId,
     createdAt: new Date(),
     updatedAt: null,
@@ -82,7 +83,7 @@ route.patch("/:id",verify, async (req, res) => {
   });
 });
 
-route.post("/",verify, async (req, res) => {
+route.post("/", async (req, res) => {
   try {
     const newProperty = new Property({
       bedtype: req.body.bedtype,
@@ -91,6 +92,7 @@ route.post("/",verify, async (req, res) => {
       parking: req.body.parking,
       numberOfBed: req.body.numberOfBed,
       desc: req.body.desc,
+      images: req.body.images,
       roomId: req.body.roomId,
       createdAt: new Date(),
       updatedAt: null,

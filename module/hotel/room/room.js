@@ -22,6 +22,7 @@ const roomSchema = mongoose.Schema({
   roomNumber: {
     type: String,
     required: true,
+    uniquue:true
   },
   hotelId: {
     type: String,
