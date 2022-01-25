@@ -156,7 +156,7 @@ route.post("/", async (req, res) => {
       status: true,
       floor: req.body.floor,
       roomNumber: req.body.roomNumber,
-      hotelId: req.user._id,
+      hotelId: req.req.hotelId,
       createdAt: new Date(),
       updatedAt: null,
       deletedAt: null,
