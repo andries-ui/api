@@ -164,7 +164,9 @@ route.post("/", async (req, res) => {
 
     await Room.create(newRoom)
       .then(() => {
-        res.send("room Saved");
+        res.send({status: "Success",
+        message:"room Saved",
+        key: newRoom._id});
       })
       .catch((err) => {
         res.send(err + '--');
