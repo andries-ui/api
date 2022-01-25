@@ -105,10 +105,13 @@ route.post("/", async (req, res) => {
 
     await Property.create(newProperty)
       .then(() => {
-        res.send("room property is updated");
+        res.send({status: "Success",
+        message:"Property details have been saved"});
       })
       .catch((err) => {
-        res.send(err+ ".");
+        res.send({status: "Failed",
+        message:"Couldn't save room property details",
+       key: newRoom._id});
         console.log(err + ".");
       });
   }catch (err) {
