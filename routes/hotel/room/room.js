@@ -69,7 +69,7 @@ route.get('/', async (req, res) => {
 
 // Getting one
 // --------------------------------------------------
-route.get('/:id', getRating, async (req, res) => {
+route.get('/:id', getRoom, async (req, res) => {
   try {
     res.send(res.client);
   } catch (err) {
@@ -83,7 +83,7 @@ route.get('/:id', getRating, async (req, res) => {
 
 // Updating one
 // --------------------------------------------------
-route.patch('/:id', getRating, async (req, res) => {
+route.patch('/:id', getRoom, async (req, res) => {
 
 
   if (req.body.type != null) {
@@ -130,7 +130,7 @@ route.patch('/:id', getRating, async (req, res) => {
 // --------------------------------------------------
 
 
-route.delete('/:id', getRating, async (req, res) => {
+route.delete('/:id', getRoom, async (req, res) => {
 
   try {
     await res.client.remove();
@@ -174,13 +174,13 @@ route.post("/", async (req, res) => {
         console.log(err);
       });
   } catch (err) {
-    resstatus(400).send({status: "Success",
-    message:err});
+    resstatus(400).send({status: "Failed",
+    message:err + "="});
   }
 });
 
 //functions 
-async function getRating(req, res, next) {
+async function getRoom(req, res, next) {
   let client;
   try {
     client = await Room.findById(req.params.id);
