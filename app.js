@@ -61,7 +61,7 @@ mongoose
 //==========================================================================
 // Middlewears
 //==========================================================================
-// app.use(cors());
+app.use(cors());
 app.use('uploads/hotel/logo', express.static('uploads/hotel/logo'));
 app.use(bodyParser.json());
 
