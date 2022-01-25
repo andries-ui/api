@@ -33,19 +33,19 @@ const upload = multer({
 
 
 
-route.get("/", verify,async (req, res) => {
+route.get("/",async (req, res) => {
   Property.find({}, async (err, results) => {
     res.send(results);
   });
 });
 
-route.get("/:id",verify, async (req, res) => {
+route.get("/:id", async (req, res) => {
   Property.findById(req.params.id, (err, results) => {
     res.send(results);
   });
 });
 
-route.delete("/:id",verify, async (req, res) => {
+route.delete("/:id", async (req, res) => {
   Property.findById(req.params.id)
     .deleteOne()
     .exec((err) => {
@@ -53,7 +53,7 @@ route.delete("/:id",verify, async (req, res) => {
     });
 });
 
-route.delete("/",verify, async (req, res) => {
+route.delete("/", async (req, res) => {
   Property.deleteMany().exec((err) => {
     res.send("Removed Successfully");
   });
