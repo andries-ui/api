@@ -156,7 +156,7 @@ route.post("/", async (req, res) => {
 async function getProperty(req, res, next) {
   let client;
   try {
-    client = await Property.findById(req.params.id);
+    client = await Property.findOne({roomId:req.params.id});
     if (client == null) {
       return res.status(404).send({
         status: 'Failed',
