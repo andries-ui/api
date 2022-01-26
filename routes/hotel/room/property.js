@@ -33,55 +33,87 @@ const upload = multer({
 
 
 
-route.get("/",async (req, res) => {
-  Property.find({}, async (err, results) => {
-    res.send(results);
-  });
-});
-
-route.get("/:id", async (req, res) => {
-  Property.findById(req.params.id, (err, results) => {
-    res.send(results);
-  });
-});
-
-route.delete("/:id", async (req, res) => {
-  Property.findById(req.params.id)
-    .deleteOne()
-    .exec((err) => {
-      res.send("Removed Successfully");
+// Getting one
+// --------------------------------------------------
+route.get('/:id', getProperty, async (req, res) => {
+  try {
+    res.send(res.client);
+  } catch (err) {
+    return res.send({
+      status: 'Failed',
+      message: 'An error has been encountered',
+      details: err
     });
+  }
 });
 
-route.delete("/", async (req, res) => {
-  Property.deleteMany().exec((err) => {
-    res.send("Removed Successfully");
-  });
+// Updating one
+// --------------------------------------------------
+route.patch('/:id', getProperty, async (req, res) => {
+
+
+  if (req.body.bedtype != null) {
+    res.client.bedtype = req.body.bedtype;
+  }
+
+  if (req.body.tv != null) {
+    res.client.tv = req.body.tv;
+  }
+
+  if (req.body.wifi != null) {
+    res.client.wifi = req.body.wifi;
+  }
+
+  if (req.body.parking != null) {
+    res.client.parking = req.body.parking;
+  }
+  
+  if (req.body.numberOfBed != null) {
+    res.client.numberOfBed = req.body.numberOfBed;
+  }
+
+  res.client.updatedAt = new Date();
+
+  try {
+    const updateproperty = await res.client.save();
+    res.send({
+      status: 'Success',
+      message: 'Updated is successful.',
+      details: updateproperty
+    })
+
+  } catch (err) {
+    res.status(400).send({
+      status: 'Failed',
+      message: 'Request is unsuccessful',
+      details: err + '.'
+    })
+  }
+
 });
 
-route.patch("/:id", async (req, res) => {
+// Deleting one
+// --------------------------------------------------
 
-  const updateProperty = new Property({
-    bedtype: req.body.bedtype,
-    tv: req.body.tv,
-    wifi: req.body.wifi,
-    packing: req.body.packing,
-    numberOfBed: req.body.numberOfBed,
-    desc: req.body.desc,
-    images: req.body.images,
-    roomId: req.body.roomId,
-    createdAt: new Date(),
-    updatedAt: null,
-    deletedAt: null,
-  });
 
-  await Property.updateOne(req.params.id, updateRoomRate, (err, results) => {
-    if (!err) {
-      return res.send("updated Successfully");
-    }
-    res.send(err);
-  });
+route.delete('/:id', getProperty, async (req, res) => {
+
+  try {
+    await res.client.remove();
+    res.send({
+      status: 'Success',
+      message: 'property has been deleted',
+    })
+  } catch (err) {
+    res.status(500).send({
+      status: 'Failed',
+      message: 'Invalid request',
+      details: err + '.'
+    })
+  }
+
 });
+
 
 route.post("/", async (req, res) => {
   try {
@@ -101,7 +133,7 @@ route.post("/", async (req, res) => {
 
     const isupdate = await Property.findOne({roomId:req.body.roomId});
 
-    if(isupdate) return res.status(400).send("room property is already inserted. unles you want to update")
+    if(isupdate) return res.status(400).send("property property is already inserted. unles you want to update")
 
     await Property.create(newProperty)
       .then(() => {
@@ -110,7 +142,7 @@ route.post("/", async (req, res) => {
       })
       .catch((err) => {
         res.send({status: "Failed",
-        message:"Couldn't save room property details",
+        message:"Couldn't save property property details",
        key: newRoom._id});
         console.log(err + ".");
       });
@@ -119,4 +151,30 @@ route.post("/", async (req, res) => {
   }
 });
 
+
+//functions 
+async function getProperty(req, res, next) {
+  let client;
+  try {
+    client = await Property.findById(req.params.id);
+    if (client == null) {
+      return res.status(404).send({
+        status: 'Failed',
+        message: 'Request is unsuccessful'
+      })
+    }
+
+  } catch (err) {
+    return res.status(500).send({
+      status: 'Failed',
+      message: 'Invalid request',
+      details: err + '.'
+    });
+  }
+
+  res.client = client;
+
+  next();
+
+}
 module.exports = route;

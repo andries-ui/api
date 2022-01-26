@@ -63,7 +63,7 @@ mongoose
 //==========================================================================
 app.use(cors());
 app.use('uploads/hotel/logo', express.static('uploads/hotel/logo'));
-app.use(bodyParser.json({limit: '200mb'}));
+app.use(bodyParser.json({limit: '1000mb'}));
 
 //location route
 app.use("/location", locationRoute);
