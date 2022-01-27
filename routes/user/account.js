@@ -10,23 +10,13 @@ const verify = require('../../validation/sherable/verifyToken');
 route.get("/:id",getAccount, async (req, res) => {
  
   try {
-    Account.findOne({_id:req.params.id}, (err, results) => {
-      if (err) {
-        res.status(400).send({
-          status: 'Failed',
-          message: 'An error has been encountered',
-          details: err + '.'
-        })
-      }
-
-      res.send(results);
-    });
+    res.send(res.client);
   } catch (err) {
-    res.status(500).send({
+    return res.send({
       status: 'Failed',
-      message: 'Server connection has failed. Please try again in a moment',
-      details: err + '.'
-    })
+      message: 'Account not found.',
+      details: err
+    });
   }
   
 });
