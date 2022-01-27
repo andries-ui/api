@@ -100,7 +100,7 @@ async function getAccount(req, res, next) {
   let client;
   try {
     client = await Account.findById(req.params.id);
-    if (client == null) {
+    if (client != null) {
       return res.status(404).send({
         status: 'Failed',
         message: 'Request is unsuccessful'
