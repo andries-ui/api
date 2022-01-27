@@ -287,7 +287,7 @@ route.post('/', async (req, res) => {
 
 // Updating one
 // --------------------------------------------------
-route.patch('/:id', upload.single('image'), getHotel, async (req, res) => {
+route.patch('/:id', getHotel, async (req, res) => {
 
 
 
