@@ -7,7 +7,7 @@ const verify = require('../../validation/sherable/verifyToken');
 
 // Get one
 // --------------------------------------------------
-route.get("/:id", async (req, res) => {
+route.get("/:id",getAccount, async (req, res) => {
  
   try {
     Account.findOne({_id:req.params.id}, (err, results) => {
