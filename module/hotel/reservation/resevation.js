@@ -4,35 +4,27 @@ const reservationSchema = mongoose.Schema({
 
   guestId: {
     type: String,
-    require: true,
   },
   hotelId: {
     type: String,
-    require: true,
   },
   roomId: {
     type: String,
-    require: true,
   },
   transportation: {
     type: Boolean,
-    require: true,
   },
   checkinDate: {
     type: String,
-    require: true,
   },
   checkoutDate: {
     type: String,
-    require: true,
   },
   adults: {
     type: String,
-    required: true,
   },
   children: {
     type: String,
-    required: true,
   },
   createdAt: {
     type: Date,
@@ -44,7 +36,6 @@ const reservationSchema = mongoose.Schema({
   },
   deletedAt: {
     type: Date,
-    default: null,
   },
 });
 
