@@ -149,7 +149,7 @@ route.post("/", async (req, res) => {
     await RoomReservation.create(newRoomReservation)
       .then((results) => {
 
-        sendEmail(results, res);
+        sendEmail(req.body, res);
         
       })
       .catch((err) => {
@@ -197,7 +197,7 @@ async function getRoomReservations(req, res, next) {
 
 const sendEmail = ((results, res) => {
 
-  const {  checkinDate,checkoutDate ,adults,children,transportation} = results;
+  const { email, checkinDate,checkoutDate ,adults,children,transportation} = results;
 
 
   const mailOptions = {

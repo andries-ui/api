@@ -1,6 +1,6 @@
 const express = require('express');
 const route = express.Router();
-const UserNotification = require("../../module/notification/userNotification");
+const UserNotifications = require("../../module/notification/userNotification");
 const verify = require('../../validation/sherable/verifyToken')
 
 
