@@ -19,11 +19,11 @@ const reservationSchema = mongoose.Schema({
     require: true,
   },
   checkinDate: {
-    type: Date,
+    type: String,
     require: true,
   },
   checkoutDate: {
-    type: Date,
+    type: String,
     require: true,
   },
   adults: {

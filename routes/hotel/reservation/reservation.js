@@ -1,10 +1,28 @@
 const express = require('express');
 const RoomReservation = require('../../../module/hotel/reservation/resevation');
 const route = express.Router();
-const verify = require('../../../validation/sherable/verifyToken')
+const verify = require('../../../validation/sherable/verifyToken');
+const nodemailer = require('nodemailer');
 
+require("dotenv").config();
 
+//nodemailer transporter
+let transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.AUTH_EMAIL,
+    pass: process.env.PASSWORD
+  }
+})
 
+transporter.verify((err, success) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log('Ready');
+  }
+
+})
 
 // Getting all
 // --------------------------------------------------
@@ -94,8 +112,6 @@ route.patch('/:id', getRoomReservations, async (req, res) => {
 
 // Deleting one
 // --------------------------------------------------
-
-
 route.delete('/:id', getRoomReservations, async (req, res) => {
 
   try {
@@ -117,7 +133,7 @@ route.delete('/:id', getRoomReservations, async (req, res) => {
 route.post("/", async (req, res) => {
   try {
     const newRoomReservation = new RoomReservation({
-      guestId: req.user._id,
+      guestId: req.body.guestId,
       hotelId: req.body.hotelId,
       roomId: req.body.roomId,
       transportation: req.body.transportation,
@@ -131,11 +147,10 @@ route.post("/", async (req, res) => {
     });
 
     await RoomReservation.create(newRoomReservation)
-      .then(() => {
-        res.send({
-          status: 'Success',
-          message: 'Posted',
-        })
+      .then((results) => {
+
+        sendEmail(results, res);
+        
       })
       .catch((err) => {
         res.send({
@@ -179,6 +194,43 @@ async function getRoomReservations(req, res, next) {
   next();
 
 }
+
+const sendEmail = ((results, res) => {
+
+  const {  checkinDate,checkoutDate ,adults,children,transportation} = results;
+
+
+  const mailOptions = {
+    from: process.env.AUTH_EMAIL,
+    to: "andriessebola001@gmail.com",
+    subject: `  `,
+    html: `<p> <b>${transportation}</b> 
+    <b>${checkinDate}</b>
+    <b>${checkoutDate}</b>
+    <b>${adults}</b>
+    <b>${children}</b></p>
+  
+            <h5>Thank you for choosing us and we are hoping for a long and healthy journey through out.</h5>
+            <h5>Reguards: SunStar development team:</h5>`
+  };
+
+
+  transporter.sendMail(mailOptions)
+    .then(() => {
+      res.status(400).send({
+        status: 'Success',
+        message: "Email is successfully sent."
+      });
+    })
+    .catch((err) => {
+      res.status(400).send({
+        status: 'Failed',
+        message: err.message
+      });
+
+
+    });
+});
 
 
 

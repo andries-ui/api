@@ -69,6 +69,28 @@ route.delete('/:id', getUserNotifications, async (req, res) => {
 
 });
 
+route.get('/notifications/:id', async (req, res) => {
+  try {
+    UserNotification.find({userId: req.params.id}, (err, results) => {
+      if (err) {
+        res.status(400).send({
+          status: 'Failed',
+          message: 'An error has been encountered',
+          details: err + '.'
+        })
+      }
+
+      res.send(results);
+    });
+  } catch (err) {
+    res.status(500).send({
+      status: 'Failed',
+      message: 'Server connection has failed. Please try again in a moment',
+      details: err + '.'
+    })
+  }
+});
+
 route.post("/", async (req, res) => {
   try {
     const newUserNotifications = new UserNotifications({
