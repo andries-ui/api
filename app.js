@@ -24,7 +24,10 @@ const locationRoute = require("./routes/sherable/location")
 const employeeRoute = require("./routes/hotel/employee/employee")
 const employeeLoginRoute = require("./routes/hotel/employee/login")
 const propertyRoute = require("./routes/hotel/room/property");
-
+const userNotificationRoute = require("./routes/notifications/userNotification");
+const driverNotificationRoute = require("./routes/notifications/driverNotification");
+const hotelNotificationRoute = require("./routes/notifications/hotelNotification");
+const adminNotificationRoute = require("./routes/notifications/adminNotification");
 
  //==========================================================================
 // Database connection
@@ -95,6 +98,12 @@ app.use("/roomReservation", roomReservationRoute);
 app.use("/tripReservation", tripReservationRoute);
 app.use("/trips", tripsRoute);
 app.use("/vehicle", vehicleRoute);
+
+// driver routes
+app.use("/userNotifications", userNotificationRoute);
+app.use("/driverNotifications", driverNotificationRoute);
+app.use("/hotelNotifications", hotelNotificationRoute);
+app.use("/adminNotifications", adminNotificationRoute);
 
 //==========================================================================
 // End
