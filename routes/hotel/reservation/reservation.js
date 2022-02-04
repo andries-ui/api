@@ -217,13 +217,13 @@ const sendEmail = ((results, res) => {
 
   transporter.sendMail(mailOptions)
     .then(() => {
-      res.status(400).send({
+      res.send({
         status: 'Success',
         message: "Email is successfully sent."
       });
     })
     .catch((err) => {
-      res.status(400).send({
+      res.status(404).send({
         status: 'Failed',
         message: err.message
       });
