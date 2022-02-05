@@ -74,7 +74,7 @@ route.get('/notifications/:id', async (req, res) => {
         res.status(400).send({
           status: 'Failed',
           message: 'An error has been encountered',
-          details: err + '.'
+          details: err + '.=>'
         })
       }
 
