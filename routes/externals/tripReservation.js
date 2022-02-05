@@ -51,16 +51,21 @@ route.patch('/:id', getReservations, async (req, res) => {
   if (req.body.status != null) {
     res.client.status = req.body.status;
   }
-
-  if (req.body.total != null) {
-    res.client.total = req.body.total;
+  if (req.body.driverId != null) {
+    res.client.driverId = req.body.driverId;
   }
-
-  if (req.body.amount != null) {
-    res.client.amount = req.body.amount;
+  if (req.body.userId != null) {
+    res.client.userId = req.body.userId;
   }
-
-
+  if (req.body.pickupDate != null) {
+    res.client.pickupDate = req.body.pickupDate;
+  }
+  if (req.body.pickupAddress != null) {
+    res.client.pickupAddress = req.body.pickupAddress;
+  }
+  if (req.body.pickupDate != null) {
+    res.client.pickupDate = req.body.pickupDate;
+  }
   
   res.client.updatedAt = new Date();
 
@@ -107,16 +112,12 @@ route.delete('/:id', getReservations, async (req, res) => {
 route.post("/", async (req, res) => {
   try {
     const newReservation = new Reservation({
-      driverId: req.body.driverId,
+      driverId: null,
       userId: req.user._id,
-      vehicleId: req.body.vehicleId,
+      vehicleId: null,
       pickupDate: req.body.pickupDate,
       pickupAddress: req.body.pickupAddress,
-      city: req.body.city,
       status: req.body.status,
-      country: req.body.country,
-      latitude: req.body.latitude,
-      longitude: req.body.longitude,
       createdAt: new Date(),
       updatedAt: null,
       deletedAt: null,
