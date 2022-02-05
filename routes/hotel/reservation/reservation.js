@@ -200,18 +200,14 @@ async function getRoomReservations(req, res, next) {
 
 const sendEmail = ((results, res) => {
 
-  const { email, checkinDate,checkoutDate ,adults,children,transportation} = results;
+  const { email,message, title, checkinDate,checkoutDate ,adults,children,transportation} = results;
 
 
   const mailOptions = {
     from: process.env.AUTH_EMAIL,
     to: email,
-    subject: `  Room Reservation`,
-    html: `<p> <b>${transportation}</b> 
-    <b>${checkinDate}</b>
-    <b>${checkoutDate}</b>
-    <b>${adults}</b>
-    <b>${children}</b></p>
+    subject: `${title}`,
+    html: `<p> ${message}</p>
   
             <h5>Thank you for choosing us and we are hoping for a long and healthy journey through out.</h5>
             <h5>Reguards: SunStar development team:</h5>`
