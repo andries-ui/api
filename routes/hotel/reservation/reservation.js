@@ -208,7 +208,7 @@ const sendEmail = ((results, res) => {
     to: email,
     subject: `${title}`,
     html: `<p> ${message}</p>
-  
+            
             <h5>Thank you for choosing us and we are hoping for a long and healthy journey through out.</h5>
             <h5>Reguards: SunStar development team:</h5>`
   };

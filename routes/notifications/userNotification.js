@@ -4,8 +4,6 @@ const UserNotifications = require("../../module/notification/userNotification");
 const verify = require('../../validation/sherable/verifyToken')
 
 
-
-
 // Getting all
 // --------------------------------------------------
 route.get('/', async (req, res) => {
@@ -83,7 +81,7 @@ route.get('/notifications/:id', async (req, res) => {
       res.send(results);
     });
   } catch (err) {
-    res.status(500).send({
+    res.send({
       status: 'Failed',
       message: 'Server connection has failed. Please try again in a moment',
       details: err + '.'
