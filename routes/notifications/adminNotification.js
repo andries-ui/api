@@ -69,8 +69,7 @@ route.get('/notifications/:id', async (req, res) => {
 
 
 // Deleting one
-// --------------------------------------------------
-
+// ---------------------------------------------------
 
 route.delete('/:id', getAdminNotification, async (req, res) => {
 
@@ -90,11 +89,41 @@ route.delete('/:id', getAdminNotification, async (req, res) => {
 
 });
 
+
+route.patch('/:id', getAdminNotification, async (req, res) => {
+
+  if (req.body.status != null) {
+    res.client.status = req.body.status;
+  }
+
+
+  res.client.updatedAt = new Date();
+
+  try {
+    const updateNotification = await res.client.save();
+    res.send({
+      status: 'Success',
+      message: 'Updated is successful.',
+      details: updateNotification
+    })
+
+  } catch (err) {
+    res.status(400).send({
+      status: 'Failed',
+      message: 'Request is unsuccessful',
+      details: err + '.'
+    })
+  }
+
+});
+
+
 route.post("/", async (req, res) => {
   try {
     const newAdminNotification = new AdminNotification({
       userId: req.body.userId,
       title: req.body.title,
+      status: true,
       message: req.body.message,
       date: new Date(),
       createdAt: new Date(),

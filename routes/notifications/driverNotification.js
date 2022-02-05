@@ -91,12 +91,39 @@ route.get('/notifications/:id', async (req, res) => {
   }
 });
 
+route.patch('/:id', getDriverNotification, async (req, res) => {
+
+  if (req.body.status != null) {
+    res.client.status = req.body.status;
+  }
+
+
+  res.client.updatedAt = new Date();
+
+  try {
+    const updateNotification = await res.client.save();
+    res.send({
+      status: 'Success',
+      message: 'Updated is successful.',
+      details: updateNotification
+    })
+
+  } catch (err) {
+    res.status(400).send({
+      status: 'Failed',
+      message: 'Request is unsuccessful',
+      details: err + '.'
+    })
+  }
+
+});
 
 route.post("/", async (req, res) => {
   try {
     const newDriverNotification = new DriverNotification({
       userId: req.body.userId,
       title: req.body.title,
+      status: true,
       message: req.body.message,
       date: new Date(),
       createdAt: new Date(),

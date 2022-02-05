@@ -13,6 +13,9 @@ const adminNotifications = mongoose.Schema({
     type: String,
     required: true,
   },
+  status:{
+    type: Boolean
+  },
   date: {
     type: Date,
     default: Date.now,

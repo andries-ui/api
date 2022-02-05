@@ -45,12 +45,8 @@ route.get('/:id', getHotelNotifications, async (req, res) => {
   }
 });
 
-
-
 // Deleting one
 // --------------------------------------------------
-
-
 route.delete('/:id', getHotelNotifications, async (req, res) => {
 
   try {
@@ -63,6 +59,33 @@ route.delete('/:id', getHotelNotifications, async (req, res) => {
     res.status(500).send({
       status: 'Failed',
       message: 'Invalid request',
+      details: err + '.'
+    })
+  }
+
+});
+
+route.patch('/:id', getHotelNotifications, async (req, res) => {
+
+  if (req.body.status != null) {
+    res.client.status = req.body.status;
+  }
+
+
+  res.client.updatedAt = new Date();
+
+  try {
+    const updateNotification = await res.client.save();
+    res.send({
+      status: 'Success',
+      message: 'Updated is successful.',
+      details: updateNotification
+    })
+
+  } catch (err) {
+    res.status(400).send({
+      status: 'Failed',
+      message: 'Request is unsuccessful',
       details: err + '.'
     })
   }
@@ -96,6 +119,7 @@ route.post("/", async (req, res) => {
     const newHotelNotifications = new HotelNotifications({
       userId: req.body.userId,
       title: req.body.title,
+      status: true,
       message: req.body.message,
       date: new Date(),
       createdAt: new Date(),

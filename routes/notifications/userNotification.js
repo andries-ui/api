@@ -89,12 +89,42 @@ route.get('/notifications/:id', async (req, res) => {
   }
 });
 
+// Updating one
+// --------------------------------------------------
+route.patch('/:id', getUserNotifications, async (req, res) => {
+
+  if (req.body.status != null) {
+    res.client.status = req.body.status;
+  }
+
+
+  res.client.updatedAt = new Date();
+
+  try {
+    const updateNotification = await res.client.save();
+    res.send({
+      status: 'Success',
+      message: 'Updated is successful.',
+      details: updateNotification
+    })
+
+  } catch (err) {
+    res.status(400).send({
+      status: 'Failed',
+      message: 'Request is unsuccessful',
+      details: err + '.'
+    })
+  }
+
+});
+
 route.post("/", async (req, res) => {
   try {
     const newUserNotifications = new UserNotification({
       userId: req.body.userId,
       title: req.body.title,
       message: req.body.message,
+      status: false,
       date: new Date(),
       createdAt: new Date(),
       deletedAt: null,
