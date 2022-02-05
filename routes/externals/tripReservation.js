@@ -47,7 +47,6 @@ route.get('/:id', getReservations, async (req, res) => {
 // --------------------------------------------------
 route.patch('/:id', getReservations, async (req, res) => {
 
-
   if (req.body.status != null) {
     res.client.status = req.body.status;
   }
@@ -113,7 +112,7 @@ route.post("/", async (req, res) => {
   try {
     const newReservation = new Reservation({
       driverId: null,
-      userId: req.user._id,
+      userId: req.body.userId,
       vehicleId: null,
       pickupDate: req.body.pickupDate,
       pickupAddress: req.body.pickupAddress,
