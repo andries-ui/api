@@ -130,7 +130,7 @@ route.post("/", async (req, res) => {
       deletedAt: null,
     });
 
-    await UserNotifications.create(newUserNotifications)
+    await UserNotification.create(newUserNotifications)
       .then(() => {
         res.send({
           status: 'Success',
