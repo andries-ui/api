@@ -1,6 +1,6 @@
 const express = require('express');
 const route = express.Router();
-const UserNotifications = require("../../module/notification/userNotification");
+const UserNotification = require("../../module/notification/userNotification");
 const verify = require('../../validation/sherable/verifyToken')
 
 
@@ -8,7 +8,7 @@ const verify = require('../../validation/sherable/verifyToken')
 // --------------------------------------------------
 route.get('/', async (req, res) => {
   try {
-    UserNotifications.find({}, (err, results) => {
+    UserNotification.find({}, (err, results) => {
       if (err) {
         res.status(400).send({
           status: 'Failed',
@@ -91,7 +91,7 @@ route.get('/notifications/:id', async (req, res) => {
 
 route.post("/", async (req, res) => {
   try {
-    const newUserNotifications = new UserNotifications({
+    const newUserNotifications = new UserNotification({
       userId: req.body.userId,
       title: req.body.title,
       message: req.body.message,
@@ -128,7 +128,7 @@ route.post("/", async (req, res) => {
 async function getUserNotifications(req, res, next) {
   let client;
   try {
-    client = await UserNotifications.findById(req.params.id);
+    client = await UserNotification.findById(req.params.id);
     if (client == null) {
       return res.status(404).send({
         status: 'Failed',
