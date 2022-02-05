@@ -14,6 +14,9 @@ const reservationSchema = mongoose.Schema({
   transportation: {
     type: Boolean,
   },
+  active: {
+    type: Boolean,
+  },
   checkinDate: {
     type: String,
   },

@@ -88,7 +88,9 @@ route.patch('/:id', getRoomReservations, async (req, res) => {
     res.client.children = req.body.children;
   }
 
-
+  if (req.body.active != null) {
+    res.client.active = req.body.active;
+  } 
   
   res.client.updatedAt = new Date();
 
@@ -140,6 +142,7 @@ route.post("/", async (req, res) => {
       checkinDate: req.body.checkinDate,
       checkoutDate: req.body.checkoutDate,
       adults: req.body.adults,
+      active: true,
       children: req.body.children,
       createdAt: new Date(),
       updatedAt: null,
