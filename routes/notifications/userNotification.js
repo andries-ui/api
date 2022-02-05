@@ -84,7 +84,7 @@ route.get('/notifications/:id', async (req, res) => {
     res.send({
       status: 'Failed',
       message: 'Server connection has failed. Please try again in a moment',
-      details: err + '.'
+      details: err + '.=='
     })
   }
 });
