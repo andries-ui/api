@@ -202,8 +202,8 @@ const sendEmail = ((results, res) => {
 
   const mailOptions = {
     from: process.env.AUTH_EMAIL,
-    to: "andriessebola001@gmail.com",
-    subject: `  `,
+    to: email,
+    subject: `  Room Reservation`,
     html: `<p> <b>${transportation}</b> 
     <b>${checkinDate}</b>
     <b>${checkoutDate}</b>
