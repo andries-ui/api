@@ -14,7 +14,8 @@ route.get('/', async (req, res) => {
           status: 'Failed',
           message: 'An error has been encountered',
           details: err + '.'
-        })
+        });
+  
       }
 
       res.send(results);
@@ -58,7 +59,7 @@ route.delete('/:id', getUserNotifications, async (req, res) => {
       message: 'Reservation has been deleted',
     })
   } catch (err) {
-    res.status(500).send({
+    res.send({
       status: 'Failed',
       message: 'Invalid request',
       details: err + '.'
@@ -93,8 +94,8 @@ route.get('/notifications/:id', async (req, res) => {
 // --------------------------------------------------
 route.patch('/:id', getUserNotifications, async (req, res) => {
 
-  if (req.body.status != null) {
-    res.client.status = req.body.status;
+  if (req.body.active != null) {
+    res.client.active = req.body.active;
   }
 
 
@@ -109,7 +110,7 @@ route.patch('/:id', getUserNotifications, async (req, res) => {
     })
 
   } catch (err) {
-    res.status(400).send({
+    res.send({
       status: 'Failed',
       message: 'Request is unsuccessful',
       details: err + '.'
@@ -160,7 +161,7 @@ async function getUserNotifications(req, res, next) {
   try {
     client = await UserNotification.findById(req.params.id);
     if (client == null) {
-      return res.status(404).send({
+      return res.send({
         status: 'Failed',
         message: 'Request is unsuccessful'
       })

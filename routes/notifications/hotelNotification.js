@@ -116,7 +116,7 @@ route.get('/notifications/:id', async (req, res) => {
 
 route.post("/", async (req, res) => {
   try {
-    const newHotelNotifications = new HotelNotifications({
+    const newHotelNotifications = new HotelNotification({
       userId: req.body.userId,
       title: req.body.title,
       status: true,
