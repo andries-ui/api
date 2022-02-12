@@ -126,7 +126,7 @@ route.post("/", async (req, res) => {
       deletedAt: null,
     });
 
-    await HotelNotifications.create(newHotelNotifications)
+    await HotelNotification.create(newHotelNotifications)
       .then(() => {
         res.send({
           status: 'Success',
@@ -154,7 +154,7 @@ route.post("/", async (req, res) => {
 async function getHotelNotifications(req, res, next) {
   let client;
   try {
-    client = await HotelNotifications.findById(req.params.id);
+    client = await HotelNotification.findById(req.params.id);
     if (client == null) {
       return res.status(404).send({
         status: 'Failed',
