@@ -220,7 +220,28 @@ route.post('/verify/:id', async (req, res) => {
     });
 });
 
+route.post('/searchHotels/', async (req, res) => {
+  try {
+  
+    Hotel.find({$or:[{name: req.body.value}, {price: req.body.value}]}, (err, results) => {
+      if (err) {
+        res.status(400).send({
+          status: 'Failed',
+          message: 'An error has been encountered',
+          details: err + '.=>'
+        })
+      }
 
+      res.send(results);
+    });
+  } catch (err) {
+    res.send({
+      status: 'Failed',
+      message: 'Server connection has failed. Please try again in a moment',
+      details: err + '.=='
+    })
+  }
+});
 // Creating one
 // --------------------------------------------------
 route.post('/', async (req, res) => {

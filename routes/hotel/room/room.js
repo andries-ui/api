@@ -62,9 +62,10 @@ route.get('/', async (req, res) => {
 // Getting one
 // --------------------------------------------------
 
-route.get('/hotel/:id', async (req, res) => {
+route.post('/searchRooms/', async (req, res) => {
   try {
-    Room.find({hotelId: req.params.id}, (err, results) => {
+  
+    Room.find({$or:[{type: req.body.value}, {price: req.body.value}]}, (err, results) => {
       if (err) {
         res.status(400).send({
           status: 'Failed',

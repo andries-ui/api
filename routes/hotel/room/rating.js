@@ -43,6 +43,29 @@ route.get('/:id', getRating, async (req, res) => {
   }
 });
 
+route.get('/ratings/:id', async (req, res) => {
+  try {
+  
+    RoomRating.find({roomId: req.params.id}, (err, results) => {
+      if (err) {
+        res.status(400).send({
+          status: 'Failed',
+          message: 'An error has been encountered',
+          details: err + '.=>'
+        })
+      }
+
+      res.send(results);
+    });
+  } catch (err) {
+    res.send({
+      status: 'Failed',
+      message: 'Server connection has failed. Please try again in a moment',
+      details: err + '.=='
+    })
+  }
+});
+
 // Updating one
 // --------------------------------------------------
 route.patch('/:id', getRating, async (req, res) => {

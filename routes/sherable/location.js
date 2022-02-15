@@ -47,6 +47,29 @@ route.get("/:id", async (req, res) => {
   }
 });
 
+route.post('/searchLocation/', async (req, res) => {
+  try {
+  
+    Room.find({$or:[{city: req.body.value}, {city: req.body.value}]}, (err, results) => {
+      if (err) {
+        res.status(400).send({
+          status: 'Failed',
+          message: 'An error has been encountered',
+          details: err + '.=>'
+        })
+      }
+
+      res.send(results);
+    });
+  } catch (err) {
+    res.send({
+      status: 'Failed',
+      message: 'Server connection has failed. Please try again in a moment',
+      details: err + '.=='
+    })
+  }
+});
+
 route.post('/', async (req, res) => {
 
   try {
