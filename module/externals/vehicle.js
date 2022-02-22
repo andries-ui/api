@@ -4,11 +4,11 @@ const vehicleSchema = mongoose.Schema({
  
   url: {
     type: String,
-    required: true,
   },
   driverId: {
     type: String,
     require: true,
+    unique: true,
   },
   vehicleName: {
     type: String,

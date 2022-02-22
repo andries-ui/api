@@ -7,8 +7,8 @@ const hotelSchema = mongoose.Schema({
     require: true,
   },
   url: {
-    type: String,
-    required: true,
+    data: Buffer,
+    contentType: String
   },
   taxNumber: {
     type: String,
@@ -26,13 +26,15 @@ const hotelSchema = mongoose.Schema({
     type: String,
     require: true,
   },
+  verified: {
+    type: Boolean,
+  },
   companyId: {
     type: String,
     require: true,
   },
   managerId: {
     type: String,
-    required: true,
   },
   createdAt: {
     type: Date,

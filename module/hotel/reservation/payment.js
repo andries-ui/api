@@ -14,6 +14,10 @@ const paymentSchema = mongoose.Schema({
     type: String,
     require: true,
   },
+  total: {
+    type: String,
+    require: true,
+  },
   paymentMethod: {
     type: String,
     require: true,
@@ -26,6 +30,9 @@ const paymentSchema = mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
   },
 });
 

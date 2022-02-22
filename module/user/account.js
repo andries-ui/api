@@ -14,7 +14,7 @@ const accountSchema = mongoose.Schema({
     default: true,
   },
   warning: {
-    type: String,
+    type: Number,
     required: true,
     default: 0,
   },
@@ -30,6 +30,7 @@ const accountSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  
   deletedAt: {
     type: Date,
     default: null,

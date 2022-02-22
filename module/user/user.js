@@ -4,43 +4,44 @@ const userShema = mongoose.Schema({
  
   username: {
     type: String,
-    required: true,
+    required: true
   },
    password: {
     type: String,
-    required: true,
+    required: true
   },
   names: {
     type: String,
-    required: true,
+    required: true
   },
    url: {
-    type: String,
+    data: Buffer,
+    contentType: String
   },
   email: {
     type: String,
-    required: true,
+    required: true
   },
   
    contact: {
     type: String,
-    required: true,
+    required: true
   },
   type: {
     type: String,
-    required: true,
+    required: true
+  },
+  verified: {
+    type: Boolean,
   },
   createdAt: {
-    type: Date,
-    default: new Date(),
+    type: String
   },
   updatedAt: {
-    type: Date,
-    default: new Date(),
+    type: String
   },
   deletedAt: {
-    type: Date,
-    default: null,
+    type: String
   },
 });
 

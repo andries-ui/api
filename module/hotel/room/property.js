@@ -23,9 +23,10 @@ const propertySchema = mongoose.Schema({
     require: true,
   },
   desc: {
-    type: String,
-    required: true,
-    default: false
+    type:Object,
+  },
+  images: {
+    type:Object,
   },
   roomId: {
     type: String,
