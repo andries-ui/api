@@ -60,8 +60,6 @@ route.patch('/:id', getPayments, async (req, res) => {
     res.client.amount = req.body.amount;
   }
 
-
-  
   res.client.updatedAt = new Date();
 
   try {

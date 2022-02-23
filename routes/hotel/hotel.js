@@ -223,7 +223,7 @@ route.post('/verify/:id', async (req, res) => {
 route.post('/searchHotels/', async (req, res) => {
   try {
   
-    Hotel.find({$or:[{name: req.body.value}, {price: req.body.value}]}, (err, results) => {
+    Hotel.find({$or:[{name: req.body.value}]}, (err, results) => {
       if (err) {
         res.status(400).send({
           status: 'Failed',
