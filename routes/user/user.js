@@ -288,7 +288,7 @@ route.post('/', async (req, res) => {
 
 // Updating one
 // --------------------------------------------------
-route.patch('/:id', upload.single('image'), getUser, async (req, res) => {
+route.patch('/:id', getUser, async (req, res) => {
 
   if (req.file.filename != null) {
     res.client.url = {
