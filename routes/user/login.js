@@ -76,7 +76,7 @@ route.post('/', async (req, res) => {
     if (type === "client") {
       return res.send({
         status: 'Failed',
-        message: 'You are not allowd to access this portal.'
+        message: 'You are not allowed to access this portal.'
       });
     }
 
@@ -177,7 +177,7 @@ route.get('/verifyUser/', async (req, res) => {
 
 
   const userprofile = await User.findOne({
-    email: req.body.email, usernaname : req.body.username
+    email: req.body.email, username : req.body.username
   });
 
   if (!userprofile) {
@@ -275,7 +275,7 @@ route.get('/verify/:id', async (req, res) => {
 
 // Updating one
 // --------------------------------------------------
-route.patch('/:id', upload.single('image'), getUser, async (req, res) => {
+route.patch('/:id', getUser, async (req, res) => {
 
   
 
