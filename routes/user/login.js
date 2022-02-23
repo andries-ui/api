@@ -173,11 +173,11 @@ route.post('/:id', async (req, res) => {
 })
 
 // Update/ Reset passeord
-route.get('/', async (req, res) => {
+route.get('/verifyUser/', async (req, res) => {
 
 
   const userprofile = await User.findOne({
-    email: req.body.email
+    email: req.body.email, usernaname : req.body.username
   });
 
   if (!userprofile) {
@@ -188,7 +188,6 @@ route.get('/', async (req, res) => {
   }
 
   sendVerificationEmail(userprofile, res);
-
 
 });
 
@@ -273,6 +272,40 @@ route.get('/verify/:id', async (req, res) => {
       });
     })
 })
+
+// Updating one
+// --------------------------------------------------
+route.patch('/:id', upload.single('image'), getUser, async (req, res) => {
+
+  
+
+  if (req.body.password != null) {
+    //encrypt password
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
+
+    res.client.password = hashPassword;
+  }
+
+  res.client.updatedAt = new Date();
+
+  try {
+    const updateUser = await res.client.save();
+    res.send({
+      status: 'Success',
+      message: 'Updated is successful.',
+      details: updateUser
+    })
+
+  } catch (err) {
+    res.status(400).send({
+      status: 'Failed',
+      message: 'Request is unsuccessful',
+      details: err + '.'
+    })
+  }
+
+});
 
 //functions 
 async function getUser(req, res, next) {
