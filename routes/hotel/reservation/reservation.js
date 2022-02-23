@@ -242,7 +242,7 @@ const sendEmail = ((results, res, id) => {
       res.send({
         status: 'Success',
         id: id,
-        message: "Email is successfully sent."
+        message: "Booking verification Email is successfully sent."
       });
     })
     .catch((err) => {
