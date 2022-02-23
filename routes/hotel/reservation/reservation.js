@@ -51,8 +51,7 @@ route.get('/', async (req, res) => {
 route.get('/reservation/:id', async (req, res) => {
   try {
 
-  
-    RoomReservation.find({guestId: req.params.id}, (err, results) => {
+    RoomReservation.find({$or:[{guestId: req.params.id}, {roomId:req.params.id}]}, (err, results) => {
       if (err) {
         res.status(400).send({
           status: 'Failed',
@@ -71,6 +70,7 @@ route.get('/reservation/:id', async (req, res) => {
     })
   }
 });
+
 
 // Getting one
 // --------------------------------------------------
