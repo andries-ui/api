@@ -361,6 +361,8 @@ const sendVerificationEmail = (async(
     expiresAt: Date.now() + 7200000
   })
 
+  Verification.deleteOne(obj._id);
+
   newVerification.save().then(() => {
     transporter.sendMail(mailOptions)
       .then(() => {
@@ -377,37 +379,10 @@ const sendVerificationEmail = (async(
         });
       })
   }).catch((err) => {
-
-    Verification.deleteOne(obj._id)
-    .then(() => {
-      newVerification.save().then(() => {
-        transporter.sendMail(mailOptions)
-          .then(() => {
-            return res.send({
-              status: 'Pending',
-              message: "Email is successfully sent.",
-              key: obj._id
-            });
-          })
-          .catch((err) => {
-           return res.send({
-              status: 'Failed',
-              message: err
-            });
-          })
-      }).catch((err) => {
-        return res.send({
-          status: 'Failed',
-          message: err
-        });
-       
-    })
-    .catch((err) => {
-      console.log(err);
-      return res.send({
-        status: 'Failed',
-        message: 'An error occured while clearing expired user verification',
-      });
+    return res.send({
+      status: 'Failed',
+      message: "Couldn't save verification record",
+      err:err+"."
     });
   })
 })
