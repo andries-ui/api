@@ -361,7 +361,40 @@ const sendVerificationEmail = (async(
     expiresAt: Date.now() + 7200000
   })
 
-  Verification.deleteOne(obj._id);
+ let data = await Verification.findOne({userId:obj._id});
+if(data != null){
+  Verification.deleteOne(obj._id).then(results=>{
+    newVerification.save().then(() => {
+      transporter.sendMail(mailOptions)
+        .then(() => {
+          return res.send({
+            status: 'Pending',
+            message: "Email is successfully sent.",
+            key: obj._id
+          });
+        })
+        .catch((err) => {
+         return res.send({
+            status: 'Failed',
+            message: err
+          });
+        })
+
+      console.log(results);
+    }).catch((err) => {
+      return res.send({
+        status: 'Failed',
+        message: "Couldn't save verification record",
+        err:err+"."
+      });
+    })
+  }).catch(err=>{
+    console.log(err);
+  });
+
+  return;
+}
+ 
 
   newVerification.save().then(() => {
     transporter.sendMail(mailOptions)
