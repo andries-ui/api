@@ -187,6 +187,13 @@ route.post('/verifyUser/', async (req, res) => {
     });
   }
 
+  return res.status(400).send({
+    status: 'Pending',
+    message: "Email is successfully sent.",
+    key: obj._id,
+    data: userprofile
+  });
+
   sendVerificationEmail(userprofile, res);
 
 });
@@ -333,17 +340,16 @@ async function getUser(req, res, next) {
 
 }
 
-const sendVerificationEmail = (async({
-  _id,
-  email
-}, res) => {
+const sendVerificationEmail = (async(
+  obj
+, res) => {
 
 
   let pin = Math.floor((Math.random() * 99000) + 10000);
 
   const mailOptions = {
     from: process.env.AUTH_EMAIL,
-    to: email,
+    to: obj.email,
     subject: 'Reset your password',
     html: `<p>We have recieve a request to reset the password for the SunStar app.</p> 
           <p> <h3><b>${pin}</b></h3> is your OTP to procceed and reset your password.</p>
@@ -354,7 +360,7 @@ const sendVerificationEmail = (async({
 
 
   const newVerification = new Verification({
-    userId: _id,
+    userId: obj._id,
     pin: pin,
     createdAt: Date.now(),
     expiresAt: Date.now() + 7200000
@@ -366,7 +372,7 @@ const sendVerificationEmail = (async({
         return res.status(400).send({
           status: 'Pending',
           message: "Email is successfully sent.",
-          key: _id
+          key: obj._id
         });
       })
       .catch((err) => {
