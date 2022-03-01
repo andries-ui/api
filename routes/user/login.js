@@ -364,20 +364,20 @@ const sendVerificationEmail = (async(
   newVerification.save().then(() => {
     transporter.sendMail(mailOptions)
       .then(() => {
-        return res.status(400).send({
+        return res.send({
           status: 'Pending',
           message: "Email is successfully sent.",
           key: obj._id
         });
       })
       .catch((err) => {
-       return res.status(400).send({
+       return res.send({
           status: 'Failed',
           message: err
         });
       })
   }).catch((err) => {
-    return res.status(201).send({
+    return res.send({
       status: 'Failed',
       message: "Couldn't save verification record"
     });
