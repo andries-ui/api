@@ -173,7 +173,7 @@ route.post('/:id', async (req, res) => {
 })
 
 // Update/ Reset passeord
-route.post('/verifyUser/', async (req, res) => {
+route.post('/verify/account', async (req, res) => {
 
 
   const userprofile = await User.findOne({
@@ -187,12 +187,7 @@ route.post('/verifyUser/', async (req, res) => {
     });
   }
 
-  return res.status(400).send({
-    status: 'Pending',
-    message: "Email is successfully sent.",
-    key: obj._id,
-    data: userprofile
-  });
+  
 
   sendVerificationEmail(userprofile, res);
 
