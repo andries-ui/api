@@ -112,8 +112,8 @@ route.post('/verify/:id', async (req, res) => {
   } = req.params;
 
   Verification.findOne({
-    userId:id
-    })
+    userId: id
+  })
     .then((results) => {
 
       if (results.length < 0) {
@@ -126,8 +126,8 @@ route.post('/verify/:id', async (req, res) => {
           Verification.deleteOne(id)
             .then(() => {
               User.deleteOne({
-                  _id: id
-                })
+                _id: id
+              })
                 .then(() => {
                   return res.send({
                     status: 'Failed',
@@ -147,64 +147,62 @@ route.post('/verify/:id', async (req, res) => {
               return res.send({
                 status: 'Failed',
                 message: 'An error occured while clearing expired user verification',
-                });
+              });
             })
         }
 
       } else {
 
-        if(results[0].pin == req.body.pin){
-    
-        if (results) {
-          User.updateOne({
+        if (results.pin == req.body.pin) {
+
+          if (results) {
+            User.updateOne({
               _id: id
             }, {
               verified: true
             })
-            .then(() => {
-              Verification.deleteOne({id})
-                .then(() => {
-                  return res.send({
-                    status: 'Success',
-                    message: 'Email is successfully registered'
-                     });
-                })
-                .catch((err) => {
-                  return res.send({
-                    status: 'Failed',
-                    message: 'An error occured while clearing expired user verification',
-                    err: err + '.'
-                     });
-            });
-          })
-            .catch((err) => {
-              return res.send({
-                status: 'Failed',
-                message: 'Error occured while updating user record verified',
+              .then(() => {
+                Verification.deleteOne({ id })
+                  .then(() => {
+                    return res.send({
+                      status: 'Success',
+                      message: 'Email is successfully registered'
+                    });
+                  })
+                  .catch((err) => {
+                    return res.send({
+                      status: 'Failed',
+                      message: 'An error occured while clearing expired user verification',
+                      err: err + '.'
+                    });
                   });
-            })
+              })
+              .catch((err) => {
+                return res.send({
+                  status: 'Failed',
+                  message: 'Error occured while updating user record verified',
+                });
+              })
+          } else {
+            return res.send({
+              status: 'Failed',
+              message: 'Invalid varification details. Please refere to your inbox.',
+            });
+          }
         } else {
           return res.send({
             status: 'Failed',
-            message: 'Invalid varification details. Please refere to your inbox.',
-               });
+            message: `Invalid pin. Please verify the pin from the email you recieved. ${results[0].pin + ' === ' + req.body.pin + " == " + id}`,
+          });
         }
-      }else{
-        return res.send({
-          status: 'Failed',
-          message: `Invalid pin. Please verify the pin from the email you recieved. ${results[0].pin + ' === ' + req.body.pin + " == " + id}`,
-             });
-      }
 
       }
-
-
     })
     .catch((err) => {
       return res.send({
         status: 'Failed',
         message: `Account already exist.${id}`,
-        details: err+ "==>>"
+        details: err + "==>>"
       });
     })
 })
@@ -388,57 +386,57 @@ async function getUser(req, res, next) {
 
 }
 
-const sendVerificationEmail = (async({
-_id,
-email
+const sendVerificationEmail = (async ({
+  _id,
+  email
 }, res) => {
 
 
-let pin = Math.floor((Math.random() * 99000) + 10000);
+  let pin = Math.floor((Math.random() * 99000) + 10000);
 
-const mailOptions = {
-  from: process.env.AUTH_EMAIL,
-  to: email,
-  subject: 'Sunstar Email verification',
-  html: `<p>Verify your e-mail address in order to complete your registration</p> 
+  const mailOptions = {
+    from: process.env.AUTH_EMAIL,
+    to: email,
+    subject: 'Sunstar Email verification',
+    html: `<p>Verify your e-mail address in order to complete your registration</p> 
           <p>This pin expires in <b>6 hours and if it does your account will be forfaited</b></p>
           <p> <h3><b>${pin}</b></h3> is your OTP to procceed.</p>
           
           <h5>Reguards: SunStar development team:</h5>`
-};
+  };
 
-await Verification.remove({
-  userId: _id
-});
-
-const newVerification = new Verification({
-  userId: _id,
-  pin: pin,
-  createdAt: Date.now(),
-  expiresAt: Date.now() + 216000000
-})
-
-newVerification.save().then(() => {
-  transporter.sendMail(mailOptions)
-    .then(() => {
-      res.status(201).send({
-        status: 'Pending',
-        message: "Email is successfully sent.",
-        key:_id
-      });
-    })
-    .catch((err) => {
-      res.status(400).send({
-        status: 'Failed',
-        message: err
-      });
-    })
-}).catch((err) => {
-  res.status(201).send({
-    status: 'Failed',
-    message: "Couldn't save verification record"
+  await Verification.remove({
+    userId: _id
   });
-})
+
+  const newVerification = new Verification({
+    userId: _id,
+    pin: pin,
+    createdAt: Date.now(),
+    expiresAt: Date.now() + 216000000
+  })
+
+  newVerification.save().then(() => {
+    transporter.sendMail(mailOptions)
+      .then(() => {
+        res.status(201).send({
+          status: 'Pending',
+          message: "Email is successfully sent.",
+          key: _id
+        });
+      })
+      .catch((err) => {
+        res.status(400).send({
+          status: 'Failed',
+          message: err
+        });
+      })
+  }).catch((err) => {
+    res.status(201).send({
+      status: 'Failed',
+      message: "Couldn't save verification record"
+    });
+  })
 })
 
 
