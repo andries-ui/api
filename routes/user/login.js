@@ -379,7 +379,8 @@ const sendVerificationEmail = (async(
   }).catch((err) => {
     return res.send({
       status: 'Failed',
-      message: "Couldn't save verification record"
+      message: "Couldn't save verification record",
+      err:err+"."
     });
   })
 })
