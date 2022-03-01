@@ -225,7 +225,7 @@ route.get('/verify/:id', async (req, res) => {
         if (results[0].pin === req.body.pin) {
 
           if (results) {
-            Verification.deleteOne({ id })
+            Verification.deleteOne({ userId:id })
               .then(() => {
                 return res.send({
                   status: 'Success',

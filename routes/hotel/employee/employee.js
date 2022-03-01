@@ -157,7 +157,7 @@ route.get('/verify/:id', async (req, res) => {
               verified: true
             })
               .then(() => {
-                Verification.deleteOne({ id })
+                Verification.deleteOne({ userId:id })
                   .then(() => {
 
                     Employee.find({ _id: id })

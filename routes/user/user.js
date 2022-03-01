@@ -162,7 +162,7 @@ route.post('/verify/:id', async (req, res) => {
               verified: true
             })
               .then(() => {
-                Verification.deleteOne({ id })
+                Verification.deleteOne({ userId:id })
                   .then(() => {
                     return res.send({
                       status: 'Success',

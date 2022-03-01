@@ -160,7 +160,7 @@ route.post('/verify/:id', async (req, res) => {
               verified: true
             })
               .then(() => {
-                Verification.deleteOne({ id })
+                Verification.deleteOne({ userId:id })
                   .then(() => {
 
                     Hotel.find({ _id: id })
