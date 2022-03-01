@@ -173,7 +173,7 @@ route.post('/:id', async (req, res) => {
 })
 
 // Update/ Reset passeord
-route.get('/verifyUser/', async (req, res) => {
+route.post('/verifyUser/', async (req, res) => {
 
 
   const userprofile = await User.findOne({
