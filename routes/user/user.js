@@ -173,7 +173,7 @@ route.post('/verify/:id', async (req, res) => {
                     return res.send({
                       status: 'Failed',
                       message: 'An error occured while clearing expired user verification',
-                      err: err + '.'
+                      details: err + '...'
                     });
                   });
               })
