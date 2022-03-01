@@ -111,7 +111,7 @@ route.post('/verify/:id', async (req, res) => {
 
   const { id } = req.params;
 
-  Verification.find({ userId: id })
+  Verification.findOne({ userId: id })
     .then((results) => {
 
       if (results.length < 0) {

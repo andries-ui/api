@@ -111,7 +111,7 @@ route.post('/verify/:id', async (req, res) => {
     id
   } = req.params;
 
-  Verification.find({
+  Verification.findOne({
       id
     })
     .then((results) => {
