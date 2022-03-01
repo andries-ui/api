@@ -192,7 +192,7 @@ route.get('/verify/:id', async (req, res) => {
   } = req.params;
 
   Verification.findOne({
-    id
+    userId:id
   })
     .then((results) => {
 
