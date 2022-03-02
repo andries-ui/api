@@ -278,7 +278,7 @@ route.post('/verify/:id', async (req, res) => {
       return res.send({
         status: 'Failed',
         message: 'Account already exist.',
-        details: err
+        details: err+"."
       });
     })
 })
