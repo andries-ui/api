@@ -239,7 +239,7 @@ route.post('/verify/:id', async (req, res) => {
 
       } else {
 
-        if (results[0].pin === req.body.pin) {
+        if (results.pin === req.body.pin) {
 
           if (results) {
             Verification.deleteOne({ userId:id })
