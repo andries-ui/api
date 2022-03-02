@@ -58,6 +58,27 @@ route.get('/', async (req, res) => {
   }
 });
 
+route.get('/rooms/:id', async (req, res) => {
+  try {
+    Room.find({hotelId: req.params.id}, (err, results) => {
+      if (err) {
+        res.status(400).send({
+          status: 'Failed',
+          message: 'An error has been encountered',
+          details: err + '.=>'
+        })
+      }
+
+      res.send(results);
+    });
+  } catch (err) {
+    res.send({
+      status: 'Failed',
+      message: 'Server connection has failed. Please try again in a moment',
+      details: err + '.=='
+    })
+  }
+});
 
 // Getting one
 // --------------------------------------------------
@@ -87,17 +108,7 @@ route.post('/searchRooms/', async (req, res) => {
 
 // Getting one
 // --------------------------------------------------
-route.get('/:id', getRoom, async (req, res) => {
-  try {
-    res.send(res.client);
-  } catch (err) {
-    return res.send({
-      status: 'Failed',
-      message: 'An error has been encountered',
-      details: err
-    });
-  }
-});
+ 
 
 // Updating one
 // --------------------------------------------------
