@@ -17,7 +17,6 @@ const roomSchema = mongoose.Schema({
   },
   roomNumber: {
     type: String,
-    unique:true
   },
   hotelId: {
     type: String,
