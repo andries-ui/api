@@ -109,6 +109,19 @@ route.post('/searchRooms/', async (req, res) => {
 // Getting one
 // --------------------------------------------------
  
+// Getting one
+// --------------------------------------------------
+route.get('/:id', getRoom, async (req, res) => {
+  try {
+    res.send(res.client);
+  } catch (err) {
+    return res.send({
+      status: 'Failed',
+      message: 'An error has been encountered',
+      details: err
+    });
+  }
+});
 
 // Updating one
 // --------------------------------------------------
@@ -157,8 +170,6 @@ route.patch('/:id', getRoom, async (req, res) => {
 
 // Deleting one
 // --------------------------------------------------
-
-
 route.delete('/:id', getRoom, async (req, res) => {
 
   try {
