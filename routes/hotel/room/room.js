@@ -225,14 +225,14 @@ async function getRoom(req, res, next) {
   try {
     client = await Room.findById(req.params.id);
     if (client == null) {
-      return res.status(404).send({
+      return res.send({
         status: 'Failed',
         message: 'Request is unsuccessful'
       })
     }
 
   } catch (err) {
-    return res.status(500).send({
+    return res.send({
       status: 'Failed',
       message: 'Invalid request',
       details: err + '.'
