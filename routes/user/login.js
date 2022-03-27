@@ -164,7 +164,7 @@ route.post('/driverLogin', async (req, res) => {
 
 
     //verify email or user name
-    if (type === "client") {
+    if (useremail.type === "client") {
       return res.send({
         status: 'Failed',
         message: 'You are not allowed to access this portal.'
