@@ -28,7 +28,7 @@ const userNotificationRoute = require("./routes/notifications/userNotification")
 const driverNotificationRoute = require("./routes/notifications/driverNotification");
 const hotelNotificationRoute = require("./routes/notifications/hotelNotification");
 const adminNotificationRoute = require("./routes/notifications/adminNotification");
-
+const creditcardRoute = require("./routes/BankingDetails/creditcarddetails")
  //==========================================================================
 // Database connection
 //==========================================================================
@@ -92,8 +92,6 @@ app.use("/property", propertyRoute);
 app.use("/payment", paymentRoute);
 app.use("/roomReservation", roomReservationRoute);
 
-
-
 // driver routes
 app.use("/tripReservation", tripReservationRoute);
 app.use("/trips", tripsRoute);
@@ -104,6 +102,10 @@ app.use("/userNotifications", userNotificationRoute);
 app.use("/driverNotifications", driverNotificationRoute);
 app.use("/hotelNotifications", hotelNotificationRoute);
 app.use("/adminNotifications", adminNotificationRoute);
+
+// Creditcard route
+
+app.use("/creditcard", creditcardRoute);
 
 //==========================================================================
 // End
