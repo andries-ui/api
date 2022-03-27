@@ -124,6 +124,96 @@ route.post('/', async (req, res) => {
 
 })
 
+route.post('/driverLogin', async (req, res) => {
+
+  try {
+    const user = new User({
+      password: req.body.password,
+      email: req.body.email,
+    });
+
+    // const 
+    //   err
+    //  = userLogin(req.body);
+
+    // if (err) return res.status(400).send(err.error.details[0].message);
+
+    // registered user
+    const useremail = await User.findOne({
+      email: req.body.email
+    });
+
+    //verify email or user name
+    if (!useremail) {
+      return res.send({
+        status: 'Failed',
+        message: 'You are not registered yet.'
+      });
+    }
+
+    // const 
+    //   err
+    //  = userLogin(req.body);
+
+    // if (err) return res.status(400).send(err.error.details[0].message);
+
+    // registered user
+    const type = await User.findOne({
+      type: req.body.type
+    });
+
+
+    //verify email or user name
+    if (type === "driver") {
+      return res.send({
+        status: 'Failed',
+        message: 'You are not allowed to access this portal.'
+      });
+    }
+
+    if (useremail.verified == false) {
+      return res.send({
+        status: 'Failed',
+        message: 'This account is not verified, Please refere to your inbox for the pin.',
+      });
+    } else {
+
+      //verify password
+      const validPassword = await bcrypt.compare(req.body.password, useremail.password);
+
+      if (!validPassword) {
+        return res.send({
+          status: 'Failed',
+          message: 'Invalid E-mail or password'
+        });
+      }
+
+
+      // create token
+      const token = jwt.sign({
+        _id: user._id
+      }, process.env.TOKEN_SECRET, {
+        expiresIn: 86400
+      });
+
+      res.header('token', token).send({
+        status: 'Success',
+        message: 'You are signed in',
+        token: token,
+        key: useremail._id,
+      });
+    }
+
+  } catch (err) {
+    res.send({
+      status: 'Failed',
+      message: 'You are not registered yet.',
+      err: err + "."
+    })
+  }
+
+
+})
 
 //Re-authentication
 route.post('/:id', async (req, res) => {
