@@ -49,7 +49,8 @@ mongoose
   .catch((e) => {
     console.log({
       status: 'Failed',
-      message: 'Server is currently Offline. Please try againe in a moment'
+      message: 'Server is currently Offline. Please try againe in a moment',
+      err: e
     })
   });
 
@@ -103,7 +104,6 @@ app.use("/hotelNotifications", hotelNotificationRoute);
 app.use("/adminNotifications", adminNotificationRoute);
 
 // Creditcard route
-
 app.use("/creditcard", creditcardRoute);
 
 //==========================================================================

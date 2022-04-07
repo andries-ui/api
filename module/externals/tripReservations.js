@@ -18,7 +18,7 @@ const tripReservationsSchema = mongoose.Schema({
     type: String,
   },
   status: {
-    type: String,
+    type: Boolean,
   },
   createdAt: {
     type: Date,

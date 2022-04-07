@@ -116,7 +116,7 @@ route.post("/", async (req, res) => {
       vehicleId: null,
       pickupDate: req.body.pickupDate,
       pickupAddress: req.body.pickupAddress,
-      status: req.body.status,
+      status: false,
       createdAt: new Date(),
       updatedAt: null,
       deletedAt: null,
